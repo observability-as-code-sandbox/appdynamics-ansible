@@ -26,7 +26,7 @@
   delegate_to: localhost
   failed_when:
    (agent_download_url.rc != 0) or
-   (agent_download_url.stdout is not match("https://download-files.appdynamics.com/download-file/"))
+   (agent_download_url.stdout is not match("http://{{ jfrog-repository }}.com/{{ agent_path }}")) #Need their repo
   changed_when: False
 
 - debug:
