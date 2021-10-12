@@ -2,3 +2,6 @@
 .DS_Store
 playbooks/my*
 playbooks/vars/my*
+
+#Ansible Inventory files
+inventory/*
