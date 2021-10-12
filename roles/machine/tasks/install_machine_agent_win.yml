@@ -45,8 +45,11 @@
 
 - name: Downloading Windows Machine Agent
   win_get_url:
-    url: "{{ agent_download_url.stdout }}"
+    url: '{{ agent_download_url }}/{{ repo }}/{{ agent_file }}'
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
+    username: "{{ username }}"
+    checksum: "{{ checksum }}"
+    password: "{{ password }}"
     force: true
   changed_when: false
   register: result
