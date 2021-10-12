@@ -10,7 +10,7 @@ readonly ARCH="$(uname -m)"
 readonly ME="$(basename "$0")"
 readonly HERE=$(CDPATH='' cd "$(dirname "$0")" && pwd -P)
 
-readonly DEFAULT_DOWNLOAD_SITE="https://download-files.appdynamics.com"
+readonly DEFAULT_DOWNLOAD_SITE="https://jadeybirdey.jfrog.io/artifactory/"
 readonly HTTP_STATUS_FILE="http_$$.status"
 
 readonly ERR_HELP=1
