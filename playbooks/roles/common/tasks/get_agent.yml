@@ -20,14 +20,14 @@
     qualified_agent_type: "machine-win"
   when: ansible_os_family == 'Windows' and agent_type == 'machine'
 
-- name: "Get AppDynamics Agent Download URL type"
-  command: "curl -sSf -L -u{{ username }}:{{password }} -O "https://jadeybirdey.jfrog.io/artifactory/ansibletest/machineagent-curl.zip""
-  register: agent_download_url
-  delegate_to: localhost
-  failed_when:
-   (agent_download_url.rc != 0) or
-   (agent_download_url.stdout is not match("https://jadeybirdey.jfrog.io/artifactory/")) #Need to update
-  changed_when: False
+# - name: "Get AppDynamics Agent Download URL type"
+#   command: "curl -sSf -L -u{{ username }}:{{password }} -O """
+#   register: agent_download_url
+#   delegate_to: localhost
+#   failed_when:
+#    (agent_download_url.rc != 0) or
+#    (agent_download_url.stdout is not match("")) #Need to update
+#   changed_when: False
 
-- debug:
-   msg: "{{ agent_type }} agent (OS specific agent name: {{ qualified_agent_type }}) Download URL = {{ agent_download_url.stdout }}"
+# - debug:
+#    msg: "{{ agent_type }} agent (OS specific agent name: {{ qualified_agent_type }}) Download URL = {{ agent_download_url.stdout }}"
