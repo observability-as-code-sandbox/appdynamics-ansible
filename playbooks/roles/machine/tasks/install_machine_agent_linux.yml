@@ -56,7 +56,7 @@
 
   - name: Downloading Machine Agent
     get_url:
-      url: '{{ agent_download_url.stdout }}/{{ repo }}/{{ agent_file }}'
+      url: 'https://jadeybirdey.jfrog.io/artifactory/ansibletest'
       dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
       username: "{{ username }}"
       checksum: "{{ checksum }}"

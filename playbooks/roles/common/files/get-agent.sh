@@ -10,7 +10,7 @@ readonly ARCH="$(uname -m)"
 readonly ME="$(basename "$0")"
 readonly HERE=$(CDPATH='' cd "$(dirname "$0")" && pwd -P)
 
-readonly DEFAULT_DOWNLOAD_SITE="https://jadeybirdey.jfrog.io/artifactory/"
+readonly DEFAULT_DOWNLOAD_SITE=""
 readonly HTTP_STATUS_FILE="http_$$.status"
 
 readonly ERR_HELP=1
@@ -190,8 +190,6 @@ download_options() {
 #   the downlod URL for the specified agent and version.
 get_download_url() {
   _version="$2"
-  
-  portal_page="https://jadeybirdey.jfrog.io/artifactory/ansibletest/machineagent-bundle4.3.7.5.zip"
 
   http_response=$(curl -s -o "${DOWNLOAD_PAGE_OUTPUT}" -w "%{http_code}" -X GET "$portal_page")
 

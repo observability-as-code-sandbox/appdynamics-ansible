@@ -21,7 +21,7 @@
   when: ansible_os_family == 'Windows' and agent_type == 'machine'
 
 - name: "Get AppDynamics Agent Download URL type"
-  command: "{{ role_path }}/files/get-agent.sh download {{ qualified_agent_type }} -v {{ agent_version }} --dryrun"
+  command: "curl -sSf -L -u{{ username }}:{{password }} -O "https://jadeybirdey.jfrog.io/artifactory/ansibletest/machineagent-curl.zip""
   register: agent_download_url
   delegate_to: localhost
   failed_when:
