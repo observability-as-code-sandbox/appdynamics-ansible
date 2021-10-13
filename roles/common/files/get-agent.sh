@@ -190,9 +190,8 @@ download_options() {
 #   the downlod URL for the specified agent and version.
 get_download_url() {
   _version="$2"
-  #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
-
-  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
+  
+  portal_page="https://jadeybirdey.jfrog.io/artifactory/ansibletest/machineagent-bundle4.3.7.5.zip"
 
   http_response=$(curl -s -o "${DOWNLOAD_PAGE_OUTPUT}" -w "%{http_code}" -X GET "$portal_page")
 
@@ -210,7 +209,7 @@ get_download_url() {
   if [ -z "$d_s3_path" ] || [ "$d_s3_path" = "" ]; then
     echo "S3 path: $d_s3_path"
     echo "processed paymoad : $processed_payload"
-    echo "https://download.appdynamics.com responded with unexpected reponse. Please ensure you have connectivity to the download page"
+    echo "Download responded with unexpected reponse. Please ensure you have connectivity to the download page"
     echo "===========Begin content============"
     cat "${DOWNLOAD_PAGE_OUTPUT}"
     echo "===========End content============"
