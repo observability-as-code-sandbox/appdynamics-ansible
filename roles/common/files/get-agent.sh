@@ -318,7 +318,7 @@ download() {
   readonly s3_download_uri=$(get_download_url "${agent}" "${version}")
 
   if [ -z "$s3_download_uri" ] || [ "$s3_download_uri" = "" ]; then
-    exit_with_error "Could not download your request . Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
+    exit_with_error "Could not download your request . Please ensure that agent version exist " "${ERR_BAD_RESPONSE}"
 
   elif [ "${dryrun}" = "true" ]; then
     download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"
