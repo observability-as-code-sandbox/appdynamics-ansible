@@ -1,6 +1,7 @@
 ---
 # Controller parameters can be included into each playbook for test purposes
-# Your AppDynamics controller host, port account and access key
+# Your AppDynamics controller host, port account and access key - These need to updated to your controller values:
+
 controller_host_name: "lncontroller20113-2011-bj3r9l8f.appd-cx.com"
 controller_port: "8090"
 controller_account_name: "customer1" # Please add this to your Vault
