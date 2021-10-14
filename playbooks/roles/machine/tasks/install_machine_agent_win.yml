@@ -48,7 +48,6 @@
     url: '{{ af_env }}/{{repo}}/{{agent_file}}'
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
     username: "{{ username }}"
-    checksum: "{{ checksum }}"
     password: "{{ password }}"
     force: true
   no_log: true #To prevent passwords to be on logs
