@@ -10,7 +10,7 @@
         # Define Agent Type and Version
         agent_version: 21.9.0 #update this when upgrading
         agent_type: machine #update this when upgrading
-        machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |
+        machine_hierarchy: "AppName|Owners|Test|" # Make sure it ends with a |  #Update this as well depending on hierarchy
         sim_enabled: "true"
         agent_log_level: "debug"
         # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
