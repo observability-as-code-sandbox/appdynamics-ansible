@@ -152,16 +152,17 @@
     changed_when: false
 
 
-  # Custom Extension Prep
-  #  - name: Create subdirectory for custom extension
-      #  file:
-      #     path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}/monitors"
-      #     state: touch
+  #Custom Extension Prep
+  - name: Create subdirectory for custom extension
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
+      state: directory
+      mode: 0755
 
   #  - name: Download custom extension 
       #  get_url:
       #     url: '{{ af_env }}/{{repo}}/{{extension_file}}'
-      #     dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}/monitors"
+      #     dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
       #     username: "{{ username }}"
       #     password: "{{ password }}"
       #     force: true
