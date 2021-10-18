@@ -123,7 +123,7 @@
     state: directory
 
   #  - name: Download custom extension 
-      #  get_url:
+      #  win_get_url:
       #     url: '{{ af_env }}/{{repo}}/{{extension_file}}'
       #     dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
       #     username: "{{ username }}"
@@ -133,6 +133,13 @@
       #   changed_when: false
       #   register: result
       #   failed_when: result.status_code != 200
+
+      # - name: Unzip machine agent file
+      #   win_unzip:
+      #     src: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
+      #     dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
+      #     remote_src: yes
+      #   changed_when: false
 
   #  - name: Install monitor.xml file
   #   file:

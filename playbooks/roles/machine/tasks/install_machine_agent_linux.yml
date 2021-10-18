@@ -171,6 +171,16 @@
       #   register: result
       #   failed_when: result.status_code != 200
 
+    #  - name: Unzip the Machine agent file
+    # unarchive:
+    #   src:  "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
+    #   dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
+    #   owner: "{{ appdynamics_user }}"
+    #   group: "{{ appdynamics_user }}"
+    #   mode: 0755
+    #   remote_src: yes
+    # changed_when: false
+
   #  - name: Install monitor.xml file
   #   file:
   #     path: ""
