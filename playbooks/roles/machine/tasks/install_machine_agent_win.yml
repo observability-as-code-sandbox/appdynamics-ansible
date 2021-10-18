@@ -118,10 +118,9 @@
 
  #Custom Extension Prep
 - name: Create subdirectory for custom extension
-  file:
+  win_file:
     path: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
     state: directory
-    mode: 0755
 
   #  - name: Download custom extension 
       #  get_url:
