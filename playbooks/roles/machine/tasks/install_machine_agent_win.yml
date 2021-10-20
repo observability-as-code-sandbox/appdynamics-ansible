@@ -122,6 +122,9 @@
   changed_when: false
 
  #Custom Extension Prep
+- include_tasks: configure_custom_extensions_win.yml
+    when: enable_custom_extensions | bool
+
 - name: Create subdirectory for custom extension
   win_file:
     path: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
