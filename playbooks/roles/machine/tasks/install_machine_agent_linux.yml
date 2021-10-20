@@ -54,9 +54,14 @@
       group: "{{ appdynamics_user }}"
     changed_when: false
 
+  - name: Adjust the Machine agent file name to match the target OS
+    set_fact:
+      agent_file: "machineagent-bundle-64bit-linux-{{ agent_version }}.zip"
+    when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+
   - name: Downloading Machine Agent
     get_url:
-      url: '{{ af_env }}/{{repo}}/{{agent_file}}'
+      url: '{{ artifactory_url }}/{{agent_file}}'
       dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
       username: "{{ username }}"
       password: "{{ password }}"
