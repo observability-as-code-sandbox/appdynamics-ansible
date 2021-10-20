@@ -9,7 +9,7 @@
         name: machine
       vars:
         #Define repo
-        artifactory_url: "https://jadeybirdey.jfrog.io/artifactory/ansibletest"
+        artifactory_url: "" #update this to repo that it's being downloaded from
         # Define Agent Type and Version
         agent_version: 21.9.0.3184 #update this when upgrading
         agent_type: machine #update this when upgrading
