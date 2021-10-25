@@ -17,7 +17,7 @@
   # - name: Adjust the Machine agent file name to match the target OS
   #   set_fact:
   #     extension_file: "" #Confirm naming
-  #   when: ansible_os_family == 'Windows' and agent_type == 'machine'
+  #   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
 
   # - name: Download custom extension 
   #     get_url:
@@ -31,7 +31,7 @@
   #     register: result
   #     failed_when: result.status_code != 200
 
-    - name: Unzip the custom extension file
+  - name: Unzip the custom extension file
   unarchive:
     src:  "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
     dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
@@ -40,10 +40,4 @@
     mode: 0755
     remote_src: yes
   changed_when: false
-
-  #  - name: Download monitor.xml file
-  #   file:
-  #     path: ""
-  #     state: absent
-  #   changed_when: false
 

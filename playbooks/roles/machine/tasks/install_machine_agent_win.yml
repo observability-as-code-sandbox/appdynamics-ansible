@@ -123,4 +123,4 @@
 
  #Custom Extensions
 - include_tasks: configure_custom_extensions_win.yml
-    when: enable_custom_extensions | bool
+  when: enable_custom_extensions | bool
