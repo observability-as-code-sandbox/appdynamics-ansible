@@ -66,7 +66,7 @@
       username: "{{ username }}"
       password: "{{ password }}"
       force: true
-    #no_log: true #To prevent passwords to be on logs
+    no_log: true #To prevent passwords to be on logs
     changed_when: false
     register: result
     failed_when: result.status_code != 200
