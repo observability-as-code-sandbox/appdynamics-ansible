@@ -156,3 +156,6 @@
       state: absent
     changed_when: false
 
+ #Custom Extensions
+- include_tasks: configure_custom_extensions_linux.yml
+    when: enable_custom_extensions | bool

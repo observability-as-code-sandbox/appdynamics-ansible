@@ -14,22 +14,22 @@
       mode: 0755
 
   #Is there a difference in custom extension for windows/linux?
-  - name: Adjust the Machine agent file name to match the target OS
-    set_fact:
-      extension_file: "" #Confirm naming
-    when: ansible_os_family == 'Windows' and agent_type == 'machine'
+  # - name: Adjust the Machine agent file name to match the target OS
+  #   set_fact:
+  #     extension_file: "" #Confirm naming
+  #   when: ansible_os_family == 'Windows' and agent_type == 'machine'
 
-  - name: Download custom extension 
-      get_url:
-        url: '{{artifactory_url}}/{{extension_file}}'
-        dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        force: true
-      no_log: true #To prevent passwords to be on logs
-      changed_when: false
-      register: result
-      failed_when: result.status_code != 200
+  # - name: Download custom extension 
+  #     get_url:
+  #       url: '{{artifactory_url}}/{{extension_file}}'
+  #       dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
+  #       username: "{{ username }}"
+  #       password: "{{ password }}"
+  #       force: true
+  #     no_log: true #To prevent passwords to be on logs
+  #     changed_when: false
+  #     register: result
+  #     failed_when: result.status_code != 200
 
     - name: Unzip the custom extension file
   unarchive:
