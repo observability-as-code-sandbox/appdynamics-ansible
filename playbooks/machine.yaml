@@ -4,6 +4,8 @@
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
       
+    # - name: Include variables for JFrog Artifactory settings
+    #   include_vars: vars/.local.artifactory.yaml
 
     - include_role:
         name: machine
@@ -17,7 +19,6 @@
         sim_enabled: "true"
         agent_log_level: "debug"
         
-
         # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
         # Can be used to configure the proxy for the agent 
         # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
@@ -30,3 +31,10 @@
 
         #Enable custom extensions
         enable_custom_extensions: "true"
+        custom_extensions_windows: 
+          WindowsEventLogsMonitoring:
+            enabled: "true"
+            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+          WindowsProcessMonitoring:
+            enabled: "false"
+            extension_file: 'WindowsProcessMonitoringExtension.zip' 
