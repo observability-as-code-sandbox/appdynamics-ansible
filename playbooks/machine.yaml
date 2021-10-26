@@ -30,7 +30,7 @@
         enable_analytics_agent: "true"
 
         #Enable custom extensions
-        enable_custom_extensions: "true"
+        enable_custom_extensions: "false"
         custom_extensions_windows: 
           WindowsEventLogsMonitoring:
             enabled: "true"
