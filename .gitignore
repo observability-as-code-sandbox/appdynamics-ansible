@@ -5,6 +5,8 @@ playbooks/vars/my*
 
 #Ansible Inventory files
 inventory/*
+ansible.cfg
 
 #Local values
 .local.*
+*.zip
