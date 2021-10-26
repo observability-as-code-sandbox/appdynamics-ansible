@@ -42,6 +42,8 @@
         analytics_event_endpoint = {{ analytics_event_endpoint }} |
         enable_analytics_agent = {{ enable_analytics_agent }}  |
         enable_custom_extensions = {{ enable_custom_extensions }}  |
+        WindowsEventLogsMonitoringenabled = {{custom_extensions_windows.WindowsEventLogsMonitoring.enabled}} |
+        WindowsProcessMonitoringenabled  = {{custom_extensions_windows.WindowsProcessMonitoring.enabled }} |
         enable_proxy = {{ enable_proxy }} |
         agent_log_level = {{ agent_log_level }}|
         agent_logger = {{ agent_loggers }}"
