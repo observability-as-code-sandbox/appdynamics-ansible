@@ -1,0 +1,12 @@
+{
+    "appNameOrID": "{{ event_log_appname }}",
+    "controllerHost": "{{ controller_host_name }}",
+    "OAuthToken": "{{ event_log_oauthtoken }}",
+
+    "windows_events_log": [
+        {
+            "System": [5000]
+        }
+    ],
+    "windows_events_search_interval_mins": 5
+}

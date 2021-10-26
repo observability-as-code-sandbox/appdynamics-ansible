@@ -1,0 +1,8 @@
+---
+
+event_log_appname: "160000"
+event_log_oauthtoken: "testtest"
+
+event_log_system:
+  - "200000"
+  - "300000"
