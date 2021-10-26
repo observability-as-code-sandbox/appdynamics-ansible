@@ -11,3 +11,5 @@ machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monit
 sim_enabled: "false"
 
 create_appdynamics_user: yes
+
+appdynamics_user_id: "" # UID

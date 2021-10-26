@@ -1,20 +1,31 @@
 ---
-- name: Make sure we have a 'wheel' group
+- name: Make sure we have a '"{{ appdynamics_user }}"' group
   group:
-    name: wheel
+    name: "{{ appdynamics_user }}"
     state: present
 
-- name: Allow 'wheel' group to have passwordless sudo
+- name: Allow '"{{ appdynamics_user }}"' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%wheel'
-    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    regexp: '^%{{ appdynamics_user }}'
+    line: '%{{ appdynamics_user }} ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
 
-- name: "Add {{ appdynamics_user }} user to wheel group"
+- name: "Add {{ appdynamics_user }} user to {{ appdynamics_user }} group with UID"
   user:
     name: "{{ appdynamics_user }}"
-    groups: wheel
+    groups: "{{ appdynamics_user }}"
+    append: yes
+    uid: "{{ appdynamics_user_id }}"
+    state: present
+  when: (appdynamics_user_id is defined) and (appdynamics_user_id|length > 0)
+
+
+- name: "Add {{ appdynamics_user }} user to {{ appdynamics_user }} group without UID"
+  user:
+    name: "{{ appdynamics_user }}"
+    groups: "{{ appdynamics_user }}"
     append: yes
     state: present
+  when: (appdynamics_user_id is not defined) or (appdynamics_user_id|length == 0)
