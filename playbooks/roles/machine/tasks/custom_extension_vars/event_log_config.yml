@@ -1,8 +1,14 @@
 ---
 
-event_log_appname: "160000"
+event_log_appname: "3"
 event_log_oauthtoken: "testtest"
+
+event_log_application:
+  - "40"
+  - "45678901234"
 
 event_log_system:
   - "200000"
   - "300000"
+
+windows_events_search_interval_mins: 5

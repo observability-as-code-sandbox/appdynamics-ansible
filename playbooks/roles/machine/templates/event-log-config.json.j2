@@ -5,8 +5,11 @@
 
     "windows_events_log": [
         {
-            "System": [5000]
+            "Application": {{event_log_application}}
+        },
+        {
+            "System": {{event_log_system}}
         }
     ],
-    "windows_events_search_interval_mins": 5
+    "windows_events_search_interval_mins": {{ windows_events_search_interval_mins }}
 }

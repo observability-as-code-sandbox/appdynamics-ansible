@@ -1,52 +1,52 @@
 
----
+# ---
 
-- name: Create subdirectory for custom extension
-  win_file:
-    path: "{{ machine_agent_dest_folder_win }}/monitors"
-    state: directory
+# - name: Create subdirectory for custom extension
+#   win_file:
+#     path: "{{ machine_agent_dest_folder_win }}/monitors"
+#     state: directory
 
-- name: Print extensions setting
-  debug:
-    var: item
-  with_dict: "{{ custom_extensions_windows }}"
+# - name: Print extensions setting
+#   debug:
+#     var: item
+#   with_dict: "{{ custom_extensions_windows }}"
 
-- name: Downloading Windows custom extensions
-  win_get_url:
-    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
-    dest: "{{ machine_agent_dest_folder_win }}/monitors"
-    username: "{{ artifactory_username }}"
-    password: "{{ artifactory_password }}"
-    force: true
-  no_log: false #To prevent passwords to be on logs
-  changed_when: false
-  register: result
-  failed_when: result.status_code != 200
-  with_dict: "{{ custom_extensions_windows }}"
-  when: item.value.enabled | bool == True
+# - name: Downloading Windows custom extensions
+#   win_get_url:
+#     url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+#     dest: "{{ machine_agent_dest_folder_win }}/monitors"
+#     username: "{{ artifactory_username }}"
+#     password: "{{ artifactory_password }}"
+#     force: true
+#   no_log: false #To prevent passwords to be on logs
+#   changed_when: false
+#   register: result
+#   failed_when: result.status_code != 200
+#   with_dict: "{{ custom_extensions_windows }}"
+#   when: item.value.enabled | bool == True
 
-- name: Unzip extension file
-  win_unzip:
-    src: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
-    dest: "{{ machine_agent_dest_folder_win }}/monitors/"
-    remote_src: yes
-  with_dict: "{{ custom_extensions_windows }}"
-  when: item.value.enabled | bool == True
+# - name: Unzip extension file
+#   win_unzip:
+#     src: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
+#     dest: "{{ machine_agent_dest_folder_win }}/monitors/"
+#     remote_src: yes
+#   with_dict: "{{ custom_extensions_windows }}"
+#   when: item.value.enabled | bool == True
 
-- name: Clean up - remove {{ item.value.extension_file }}
-  win_file:
-    path: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
-    state: absent
-  changed_when: false
-  with_dict: "{{ custom_extensions_windows }}"
-  when: item.value.enabled | bool == True
+# - name: Clean up - remove {{ item.value.extension_file }}
+#   win_file:
+#     path: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
+#     state: absent
+#   changed_when: false
+#   with_dict: "{{ custom_extensions_windows }}"
+#   when: item.value.enabled | bool == True
 
 - include_vars: custom_extension_vars/event_log_config.yml
 
 - name: 'Configure Event log config file'
   template:
     src: templates/event-log-config.json.j2
-    dest: '{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_file }}/config.json'
+    dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}/config.json'
     owner: "{{ appdynamics_user }}"
     group: "{{ appdynamics_user }}"
     mode: 0755
