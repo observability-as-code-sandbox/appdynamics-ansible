@@ -3,22 +3,53 @@
 
 - name: Create subdirectory for custom extension
   win_file:
-    path: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
+    path: "{{ machine_agent_dest_folder_win }}/monitors"
     state: directory
 
-#Is there a difference in custom extension for windows/linux?
-# - name: Adjust the Machine agent file name to match the target OS
-#   set_fact:
-#     extension_file: "" #Confirm naming
-#   when: ansible_os_family == 'Windows' and agent_type == 'machine'
+- name: Print extensions setting
+  debug:
+    var: item
+  with_dict: "{{ custom_extensions_windows }}"
 
-- name: Copy file with owner and permissions (testing on local)
-  copy:
-    src: 
-    dest: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
-    mode: 0755
-    changed_when: false
-    register: result
+- name: Downloading Windows custom extensions
+  win_get_url:
+    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+    dest: "{{ machine_agent_dest_folder_win }}/monitors"
+    username: "{{ artifactory_username }}"
+    password: "{{ artifactory_password }}"
+    force: true
+  no_log: false #To prevent passwords to be on logs
+  changed_when: false
+  register: result
+  failed_when: result.status_code != 200
+  with_dict: "{{ custom_extensions_windows }}"
+  when: item.value.enabled | bool == True
+
+- name: Unzip extension file
+  win_unzip:
+    src: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
+    dest: "{{ machine_agent_dest_folder_win }}/monitors/"
+    remote_src: yes
+  with_dict: "{{ custom_extensions_windows }}"
+  when: item.value.enabled | bool == True
+
+- name: Clean up - remove {{ item.value.extension_file }}
+  win_file:
+    path: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
+    state: absent
+  changed_when: false
+  with_dict: "{{ custom_extensions_windows }}"
+  when: item.value.enabled | bool == True
+
+### 
+
+# - name: Copy file with owner and permissions (testing on local)
+#   copy:
+#     src: 
+#     dest: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
+#     mode: 0755
+#     changed_when: false
+#     register: result
 
 
 # - name: Download custom extension - artifactory
@@ -33,9 +64,9 @@
 #     register: result
 #     failed_when: result.status_code != 200
 
-- name: Unzip custom extension file
-  win_unzip:
-    src: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
-    dest: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
-    remote_src: yes
-  changed_when: false
+# - name: Unzip custom extension file
+#   win_unzip:
+#     src: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
+#     dest: "{{ machine_agent_dest_folder_win }}/monitors/customextensions"
+#     remote_src: yes
+#   changed_when: false
