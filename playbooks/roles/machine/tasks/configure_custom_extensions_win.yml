@@ -18,7 +18,7 @@
     username: "{{ artifactory_username }}"
     password: "{{ artifactory_password }}"
     force: true
-  no_log: false #To prevent passwords to be on logs
+  no_log: true #To prevent passwords to be on logs
   changed_when: false
   register: result
   failed_when: result.status_code != 200
@@ -42,6 +42,7 @@
   with_dict: "{{ custom_extensions_windows }}"
   when: item.value.enabled | bool == True
 
+#Include variable files for different custom extensions
 - include_vars: custom_extension_vars/event_log_win_config.yml
 - include_vars: custom_extension_vars/process_monitor_win_config.yml
 
@@ -50,7 +51,7 @@
       WindowsEventLogsMonitoring_enabled: "{{ true if custom_extensions_windows.WindowsEventLogsMonitoring.enabled == true else false }}"
   loop: "{{ lookup('dict', custom_extensions_windows) }}"
 
-- name: 'Configure Event log config file'
+- name: Configure Event log config file - if WindowsEventLogsMonitoring is enabled
   template:
     src: templates/event-log-win-config.json.j2
     dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/config.json'
@@ -66,7 +67,7 @@
       WindowsProcessMonitoring_enabled: "{{ true if custom_extensions_windows.WindowsProcessMonitoring.enabled == true else false }}"
   loop: "{{ lookup('dict', custom_extensions_windows) }}"
 
-- name: 'Configure Process Monitoring config file'
+- name: Configure Process Monitoring config file - if WindowsProcessMonitoring is enabled
   template:
     src: templates/process-monitor-win-config.json.j2
     dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/config.json' 
