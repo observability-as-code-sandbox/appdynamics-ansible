@@ -28,10 +28,11 @@
 - name: Unzip extension file
   win_unzip:
     src: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}"
-    dest: "{{ machine_agent_dest_folder_win }}/monitors/"
+    dest: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}"
     remote_src: yes
   with_dict: "{{ custom_extensions_windows }}"
   when: item.value.enabled | bool == True
+  
 
 - name: Clean up - remove {{ item.value.extension_file }}
   win_file:
@@ -44,26 +45,39 @@
 - include_vars: custom_extension_vars/event_log_win_config.yml
 - include_vars: custom_extension_vars/process_monitor_win_config.yml
 
+- name: Check WindowsEventLogsMonitoring is enabled
+  set_fact:
+      WindowsEventLogsMonitoring_enabled: "{{ true if custom_extensions_windows.WindowsEventLogsMonitoring.enabled == true else false }}"
+  loop: "{{ lookup('dict', custom_extensions_windows) }}"
+
 - name: 'Configure Event log config file'
   template:
     src: templates/event-log-win-config.json.j2
-    dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}/config.json'
+    dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/config.json'
     owner: "{{ appdynamics_user }}"
     group: "{{ appdynamics_user }}"
     mode: 0755
   changed_when: false
-  when: 
+  with_dict: "{{custom_extensions_windows}}"
+  when: WindowsEventLogsMonitoring_enabled == true
+
+- name: Check WindowsProcessMonitoring is enabled
+  set_fact:
+      WindowsProcessMonitoring_enabled: "{{ true if custom_extensions_windows.WindowsProcessMonitoring.enabled == true else false }}"
+  loop: "{{ lookup('dict', custom_extensions_windows) }}"
 
 - name: 'Configure Process Monitoring config file'
   template:
     src: templates/process-monitor-win-config.json.j2
-    dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_file }}/config.json'
+    dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/config.json' 
     owner: "{{ appdynamics_user }}"
     group: "{{ appdynamics_user }}"
     mode: 0755
   changed_when: false
-  when: 
+  when: WindowsProcessMonitoring_enabled == true 
 
+
+### 
 ### 
 
 # - name: Copy file with owner and permissions (testing on local)

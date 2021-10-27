@@ -33,8 +33,10 @@
         enable_custom_extensions: "true"
         custom_extensions_windows: 
           WindowsEventLogsMonitoring:
-            enabled: "true"
+            enabled: true   #No quotes
+            extension_folder: 'EventLog'
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
           WindowsProcessMonitoring:
-            enabled: "false"
+            enabled: false  #No quotes
+            extension_folder: 'ProcessMonitoring'
             extension_file: 'WindowsProcessMonitoringExtension.zip' 

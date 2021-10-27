@@ -1,14 +1,10 @@
 ---
 
-event_log_appname: "3"
-event_log_oauthtoken: "testtest"
+event_log_appname: "165"
+event_log_oauthtoken: "testtesttesttesttest"
 
-event_log_application:
-  - "40"
-  - "45678901234"
+event_log_application: '["App 1", "App2", "App3"]'
 
-event_log_system:
-  - "200000"
-  - "300000"
+event_log_system: '["1", "23232", "444444", "77777777", "888888"]'
 
 windows_events_search_interval_mins: 5
