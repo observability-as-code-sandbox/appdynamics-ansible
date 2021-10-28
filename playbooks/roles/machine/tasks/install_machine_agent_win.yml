@@ -52,8 +52,8 @@
   win_get_url:
     url: '{{ artifactory_url }}/{{agent_file}}'
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
+    username: "{{ artifactory_username }}"
+    password: "{{ artifactory_password }}"
     force: true
   no_log: true #To prevent passwords to be on logs
   changed_when: false
