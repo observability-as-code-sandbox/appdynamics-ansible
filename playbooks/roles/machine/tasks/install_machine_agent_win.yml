@@ -52,8 +52,8 @@
   win_get_url:
     url: '{{ artifactory_url }}/{{ agent_file }}'
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
-    username: "{{ artifactory_username }}"
-    password: "{{ artifactory_password }}"
+    url_username: "{{ artifactory_username }}"
+    url_password: "{{ artifactory_password }}"
     force: true
   no_log: true #To prevent passwords to be on logs
   changed_when: false
@@ -105,6 +105,9 @@
 
 - include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent | bool
+
+
+#todo: Splitting the file in two: download & configure and installation (so that custom extesnions can be copied in between)
 
 - name: 'Install machine agent service'
   win_command: "cscript.exe {{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
