@@ -34,7 +34,9 @@
             enabled: true   #No quotes
             extension_folder: 'EventLog'
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+            template: "event-log-win-config.json.j2"
           WindowsProcessMonitoring:
             enabled: false  #No quotes
             extension_folder: 'ProcessMonitoring'
-            extension_file: 'WindowsProcessMonitoringExtension.zip' 
+            extension_file: 'WindowsServiceMonitorExtension.zip'
+            template: "process-monitor-win-config.json.j2"
