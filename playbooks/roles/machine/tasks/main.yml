@@ -1,3 +1,9 @@
+---
+- name: Controller URL must be provided
+  fail:
+    msg: "The variable 'controller_host_name' is empty"
+  when: (controller_host_name is not defined) or (controller_host_name|length == 0)
+
 - include_tasks: install_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
 

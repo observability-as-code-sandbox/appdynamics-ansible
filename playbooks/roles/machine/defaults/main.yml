@@ -10,4 +10,7 @@ machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monit
 # Server visibility
 sim_enabled: "false"
 
+# AppDynamics user on target machine 
 create_appdynamics_user: yes
+appdynamics_user_id: "" # UID, empty by default
+appdynamics_group_id: "" # GID, empty by default
