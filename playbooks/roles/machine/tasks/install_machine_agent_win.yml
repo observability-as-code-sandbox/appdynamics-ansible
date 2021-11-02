@@ -45,12 +45,12 @@
 
 - name: Adjust the Machine agent file name to match the target OS
   set_fact:
-    agent_file: "machineagent-bundle-64bit-windows-{{agent_version}}.zip"
+    agent_file: "machineagent-bundle-64bit-windows-{{ agent_version }}.zip"
   when: ansible_os_family == 'Windows' and agent_type == 'machine'
 
 - name: Downloading Windows Machine Agent
   win_get_url:
-    url: '{{ artifactory_url }}/{{agent_file}}'
+    url: '{{ artifactory_url }}/{{ agent_file }}'
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
     username: "{{ artifactory_username }}"
     password: "{{ artifactory_password }}"
