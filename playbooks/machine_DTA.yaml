@@ -1,0 +1,60 @@
+---
+#For DTA machines
+
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings - Prod
+      include_vars: vars/controller_DTA.yaml
+      
+    - name: Include variables for JFrog Artifactory settings - Same for Prod and DTA as both would use the same agent.
+      include_vars: vars/artifactory.yaml
+
+    - include_role:
+        name: machine
+      vars:
+        # Define Agent Type and Version
+        agent_version: 21.9.0.3184 #update this when upgrading
+        agent_type: machine #update this when upgrading
+        machine_hierarchy: "AppName|Owners|Test|" # Make sure it ends with a |  #Update this as well depending on hierarchy
+        sim_enabled: "true"
+        agent_log_level: "debug"
+        
+        # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
+        # Can be used to configure the proxy for the agent 
+        # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
+        # check with ps -ef | grep machine if Machine agent not appearing
+        java_system_properties: "" 
+
+        # Analytics settings
+        analytics_event_endpoint: ""
+        enable_analytics_agent: "true"
+
+        #Enable custom extensions
+        enable_custom_extensions: "true"
+        enable_custom_extensions_PAAS: "true"
+        custom_extensions_windows_PAAS: 
+          WindowsEventLogsMonitoring:
+            enabled: true   #No quotes
+            extension_folder: 'EventLog'
+            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+            template: "event-log-win-config.json.j2"
+          WindowsProcessMonitoring:
+            enabled: false  #No quotes
+            extension_folder: 'ProcessMonitoring'
+            extension_file: 'WindowsServiceMonitorExtension.zip'
+            template: "process-monitor-win-config.json.j2"
+
+        #Enable for IAAS?
+        enable_custom_extensions_IAAS: "false"
+        custom_extensions_windows_IAAS: 
+          WindowsEventLogsMonitoring:
+            enabled: false   #No quotes
+            extension_folder: 'EventLog'
+            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+            template: "event-log-win-config.json.j2"
+          WindowsProcessMonitoring:
+            enabled: true #No quotes
+            extension_folder: 'ProcessMonitoring'
+            extension_file: 'WindowsServiceMonitorExtension.zip'
+            template: "process-monitor-win-config.json.j2"
+      

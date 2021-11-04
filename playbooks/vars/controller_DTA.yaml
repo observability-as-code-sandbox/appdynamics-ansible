@@ -1,0 +1,13 @@
+---
+
+# Controller parameters can be included into each playbook 
+# Your AppDynamics controller host, port account and access key - These need to updated to your controller values.
+# Recommend saving this as a local copy to avoid values being in public.
+
+controller_host_name: "" #Update this to controller DNS
+controller_port: "" #Default port is 8090 - change to other port if not default
+controller_account_name: "" #Usually customer1
+controller_account_access_key: "" # Found under licenses
+enable_ssl: ""
+controller_global_analytics_account_name: '' # Usually customer1_xxxxx-xxxx-xxxx-xxxx
+agent_log_level: "debug" # info | trace | debug | warn | error | fatal | all | off
