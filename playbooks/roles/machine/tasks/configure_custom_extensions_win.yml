@@ -11,7 +11,8 @@
     var: item
   with_dict: "{{ custom_extensions_windows }}"
 
-#todo: check if extesnion exists in target JFrog Artifactory
+#todo: check if extesnion exists in target JFrog Artifactory - https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-FileInfo 
+#https://stackoverflow.com/questions/42485260/ansible-check-file-exists-in-the-http-path-before-get-url-win-get-url
 
 - name: Downloading Windows custom extensions
   win_get_url:
@@ -53,7 +54,7 @@
 #       WindowsEventLogsMonitoring_enabled: "{{ true if custom_extensions_windows.WindowsEventLogsMonitoring.enabled == true else false }}"
 #   loop: "{{ lookup('dict', custom_extensions_windows) }}"
 
-- name: Configure Event log config file - if Custom Extension is enabled
+- name: Configure Custom Extension config file - if Custom Extension is enabled
   template:
     src: "templates/{{ item.value.template }}"
     dest: '{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/config.json'
