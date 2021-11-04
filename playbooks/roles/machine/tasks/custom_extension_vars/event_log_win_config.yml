@@ -1,5 +1,7 @@
 ---
 
+#These values need to be filled in
+
 event_log_appname: "165"
 event_log_oauthtoken: "testtesttesttesttest"
 

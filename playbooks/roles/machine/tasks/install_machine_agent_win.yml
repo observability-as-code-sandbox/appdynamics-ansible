@@ -1,6 +1,6 @@
 ---
 
-#todo: Splitting the file in two: download & configure and installation (so that custom extesnions can be copied in between)
+#This installs the Machine Agent for Windows - will run after downloading Machine agent + configuring custom extensions
 
 - name: 'Install machine agent service'
   win_command: "cscript.exe {{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
