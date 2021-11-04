@@ -11,6 +11,12 @@
 - include_tasks: download_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
 
+- include_tasks: configure_custom_extensions_linux.yml
+  when: enable_custom_extensions | bool and (ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian')
+
+- include_tasks: configure_custom_extensions_win.yml
+  when: enable_custom_extensions | bool and ansible_os_family == 'Windows'
+
 - include_tasks: install_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
 

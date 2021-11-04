@@ -106,7 +106,3 @@
 - include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent | bool
 
- #Custom Extensions
-- include_tasks: configure_custom_extensions_win.yml
-  when: enable_custom_extensions | bool
-
