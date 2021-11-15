@@ -1,43 +1,89 @@
-
 ---
 
-#Create new directory 
-#Download script (is it zip file?)
-#Create monitor.xml file
+- name: Print extensions setting
+  debug:
+    var: item
+  with_dict: "{{ custom_extensions_linux }}"
 
+- name: Re-create the extension dir
+  become: true
+  file:
+    path: "{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_folder }}"
+    state: directory
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+  changed_when: false
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
 
+- name: Check if custom extension file exists
+  uri:
+    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+    method: HEAD
+    url_username: "{{ artifactory_username }}"
+    url_password: "{{ artifactory_password }}"
+  register: uri_test
+  # fail with error if status is unexpected
+  failed_when: uri_test.status is undefined or uri_test.status <= 0 or uri_test.status >=400
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
 
-  - name: Create subdirectory for custom extension
-    file:
-      path: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
-      state: directory
-      mode: 0755
+# Downloading custom extension
+- name: Downloading Linux custom extensions 
+  become: true
+  get_url:
+    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+    dest: "{{ machine_agent_dest_folder_linux }}/monitors"
+    url_username: "{{ artifactory_username }}"
+    url_password: "{{ artifactory_password }}"
+    force: true
+  no_log: false #To prevent passwords to be on logs
+  changed_when: false
+  register: result
+  #failed_when: result.status != 200
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
 
-  #Is there a difference in custom extension for windows/linux?
-  # - name: Adjust the Machine agent file name to match the target OS
-  #   set_fact:
-  #     extension_file: "" #Confirm naming
-  #   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+- name: Unzip extension file
+  become: true
+  unarchive:
+    src: "{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_file }}"
+    dest: "{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_folder }}"
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+    mode: 0755
+    remote_src: yes
+  changed_when: false
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
 
-  # - name: Download custom extension 
-  #     get_url:
-  #       url: '{{artifactory_url}}/{{extension_file}}'
-  #       dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
-  #       username: "{{ username }}"
-  #       password: "{{ password }}"
-  #       force: true
-  #     no_log: true #To prevent passwords to be on logs
-  #     changed_when: false
-  #     register: result
-  #     failed_when: result.status_code != 200
+- name: Clean up - remove {{ item.value.extension_file }}
+  become: true
+  file:
+    path: "{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_file }}"
+    state: absent
+  changed_when: false
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
 
-  - name: Unzip the custom extension file
-    unarchive:
-      src:  "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
-      dest: "{{ machine_agent_dest_folder_linux }}/monitors/customextensions"
-      owner: "{{ appdynamics_user }}"
-      group: "{{ appdynamics_user }}"
-      mode: 0755
-      remote_src: yes
-    changed_when: false
+#Include variable files for different custom extensions
+- include_vars: custom_extension_vars/event_log_win_config.yml
+- include_vars: custom_extension_vars/process_monitor_win_config.yml
 
+- name: Configure Custom Extension config file - if Custom Extension is enabled
+  become: true
+  template:
+    src: "templates/custom_extensions/{{ item.value.extension_template }}"
+    dest: '{{ machine_agent_dest_folder_linux }}/monitors/{{ item.value.extension_folder }}/config.json'
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+    mode: 0755
+  changed_when: false
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
