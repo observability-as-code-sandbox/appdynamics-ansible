@@ -4,21 +4,23 @@
     msg: "The variable 'controller_host_name' is empty"
   when: (controller_host_name is not defined) or (controller_host_name|length == 0)
 
-#Include below once file is ready
-# - include_tasks: download_machine_agent_linux.yml
-#   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+# Download Agent
+- include_tasks: download_machine_agent_linux.yml
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
 - include_tasks: download_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
 
+# Download and Configure Custom Extensions
 - include_tasks: configure_custom_extensions_linux.yml
-  when: enable_custom_extensions | bool and (ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian')
+  when: enable_custom_extensions | bool == True and (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
 
 - include_tasks: configure_custom_extensions_win.yml
-  when: enable_custom_extensions | bool and ansible_os_family == 'Windows'
+  when: enable_custom_extensions | bool == True and ansible_os_family == 'Windows'
 
+# Install machine agent
 - include_tasks: install_machine_agent_linux.yml
-  when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
 - include_tasks: install_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
