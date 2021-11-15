@@ -1,0 +1,61 @@
+---
+
+#For Production machines
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+
+    - name: Include variables for JFrog Artifactory settings
+      include_vars: vars/artifactory.yaml
+
+    - include_role:
+        name: machine
+      vars:
+        # Define Agent Type and Version
+        agent_version: 21.9.0.3184 #update this when upgrading
+        agent_type: machine #update this when upgrading
+        machine_hierarchy: "AppName|Owners|Test|" # Make sure it ends with a |  #Update this as well depending on hierarchy
+        sim_enabled: "true"
+        agent_log_level: "info"
+        
+        # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
+        # Can be used to configure the proxy for the agent 
+        # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
+        # check with ps -ef | grep machine if Machine agent not appearing
+        java_system_properties: "" 
+
+        # Analytics settings
+        analytics_event_endpoint: ""
+        enable_analytics_agent: "false"
+
+        # todo
+        # controller_environment: "prod" # prod / dat host: prod: sdfsdf dat: sdasd as dict
+
+        # Apply different custom extension configuration and/or deploy additional extensions
+        is_support_group_paas: false # true / false
+
+        #Enable custom extensions
+        enable_custom_extensions: true
+
+        custom_extensions_windows: 
+          EventLogMonitor:
+            enabled: true  
+            extension_folder: 'EventLog'
+            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+            extension_template: "win-event-log-config.json.j2"
+            extension_vars: "event_log_win_config" # no file extension
+          # NonExisting:
+          #   enabled: true  
+          #   extension_folder: 'NonExisting'
+          #   extension_file: 'NonExisting.zip' 
+          #   extension_template: "event-log-win-config.json.j2"
+
+        custom_extensions_linux:
+          ProcessMonitor:
+            enabled: true  
+            extension_folder: 'ProcessMonitoring'
+            extension_file: 'WindowsServiceMonitorExtension.zip'
+            extension_template: "linux-process-monitor-config.json.j2"
+            extension_vars: "process_monitor_win_config" # no file extension
+
