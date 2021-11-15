@@ -35,6 +35,12 @@
         appdynamics_user_id: "" # UID, empty by default
         appdynamics_group_id: "" # GID, empty by default
 
+        # Encrypt Agent Credentials
+        # store_filename file has to already be created to enable this functionality
+        encrypted_credentials_enable: false
+        encrypted_credentials_store_filename: "" # important: package this file together with agent binaries (path to file, e.g. /opt/appdynamics/machine-agent/secretKeyStoreEncrypted)
+        encrypted_credentials_store_password: "" # important: obfuscated credentials store password (not plaintext)
+
         # todo
         # controller_environment: "prod" # prod / dat host: prod: sdfsdf dat: sdasd as dict
 

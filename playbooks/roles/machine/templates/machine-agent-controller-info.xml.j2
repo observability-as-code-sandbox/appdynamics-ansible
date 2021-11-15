@@ -80,5 +80,12 @@
 
     <machine-path>{{ machine_hierarchy }}</machine-path>
 
+    <!-- Enable the Secure Credential Store -->
+    <use-encrypted-credentials>{{ encrypted_credentials_enable }}</use-encrypted-credentials>
+    <!-- Path to they secure credential keystore -->
+    <credential-store-filename>{{ encrypted_credentials_store_filename }}</credential-store-filename>
+    <!-- Obfuscated secure credential keystore password -->
+    <credential-store-password>{{ encrypted_credentials_store_password }}</credential-store-password>
+
 </controller-info>
 
