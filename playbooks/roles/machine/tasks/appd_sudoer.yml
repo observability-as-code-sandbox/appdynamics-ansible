@@ -10,7 +10,7 @@
   group:
     name: "{{ appdynamics_user }}"
     state: present
-  when: (appdynamics_group_id is not defined) and (appdynamics_group_id|length == 0)
+  when: (appdynamics_group_id is not defined) or (appdynamics_group_id|length == 0)
 
 - name: Allow '"{{ appdynamics_user }}"' group to have passwordless sudo
   lineinfile:
@@ -23,17 +23,18 @@
 - name: "Add {{ appdynamics_user }} user to {{ appdynamics_user }} group with UID"
   user:
     name: "{{ appdynamics_user }}"
-    groups: "{{ appdynamics_user }}"
+    groups: 
+      - "{{ appdynamics_user }}"
     append: yes
     uid: "{{ appdynamics_user_id }}"
     state: present
   when: (appdynamics_user_id is defined) and (appdynamics_user_id|length > 0)
 
-
 - name: "Add {{ appdynamics_user }} user to {{ appdynamics_user }} group without UID"
   user:
     name: "{{ appdynamics_user }}"
-    groups: "{{ appdynamics_user }}"
+    groups: 
+      - "{{ appdynamics_user }}"
     append: yes
     state: present
   when: (appdynamics_user_id is not defined) or (appdynamics_user_id|length == 0)
