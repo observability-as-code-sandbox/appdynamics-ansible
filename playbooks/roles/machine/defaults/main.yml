@@ -7,10 +7,11 @@ temp_dir: /tmp
 # machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
 machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monitor/"
 
-# Server visibility
+# Server visibility - -false by default
 sim_enabled: "false"
 
-# AppDynamics user on target machine 
+# Create user - true by default
 create_appdynamics_user: yes
-appdynamics_user_id: "" # UID, empty by default
-appdynamics_group_id: "" # GID, empty by default
+
+# Deploy custom extensions - false by default
+enable_custom_extensions: false

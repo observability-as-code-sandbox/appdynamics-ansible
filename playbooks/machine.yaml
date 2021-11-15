@@ -29,14 +29,20 @@
         analytics_event_endpoint: ""
         enable_analytics_agent: "false"
 
+        # AppDynamics user on target machine 
+        create_appdynamics_user: yes
+        create_appdynamics_local_user: true # todo currently defaults to yes 
+        appdynamics_user_id: "" # UID, empty by default
+        appdynamics_group_id: "" # GID, empty by default
+
         # todo
         # controller_environment: "prod" # prod / dat host: prod: sdfsdf dat: sdasd as dict
 
         # Apply different custom extension configuration and/or deploy additional extensions
         is_support_group_paas: false # true / false
 
-        #Enable custom extensions
-        enable_custom_extensions: true
+        # Enable custom extensions
+        enable_custom_extensions: false
 
         custom_extensions_windows: 
           EventLogMonitor:
@@ -45,11 +51,6 @@
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
             extension_template: "win-event-log-config.json.j2"
             extension_vars: "event_log_win_config" # no file extension
-          # NonExisting:
-          #   enabled: true  
-          #   extension_folder: 'NonExisting'
-          #   extension_file: 'NonExisting.zip' 
-          #   extension_template: "event-log-win-config.json.j2"
 
         custom_extensions_linux:
           ProcessMonitor:
