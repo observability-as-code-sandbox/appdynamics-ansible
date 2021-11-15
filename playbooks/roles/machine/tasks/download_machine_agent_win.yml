@@ -1,9 +1,4 @@
 ---
-# - name: Validate that the agent download URL is fit for Windows
-#   assert:
-#     that: "win_ma_finder_string in agent_download_url.stdout"
-#     fail_msg: "It looks like you have downloaded the Linux machine agent instead of the Windows machine agent. You entered '{{ qualified_agent_type }}' in the playbook. Try using 'machine-win' instead. The URL: {{ agent_download_url.stdout }} is expected to contain {{ win_ma_finder_string }}"
-#     success_msg: "Successfully validated {{ qualified_agent_type }} for Windows"
 
 - name: Ensures machine agent {{ machine_agent_dest_folder_win }} dir exists
   win_file:
@@ -55,7 +50,7 @@
     url_username: "{{ artifactory_username }}"
     url_password: "{{ artifactory_password }}"
     force: true
-  no_log: true #To prevent passwords to be on logs
+  no_log: false #To prevent passwords to be on logs
   changed_when: false
   register: result
   failed_when: result.status_code != 200
@@ -85,23 +80,14 @@
   register: remove_read_std_in_result
   changed_when: false
 
-# Update the Log4j setting to apply the desired log level to all the loggers
-# listed in the {{agent_loggers}} list.
-- name: Set the log level on the agent (if != info, which it is by default)
-  include_role:
-    name: logger
-  vars:
-    logger_role_standalone: false # no need to check if the dir exists
-  when: agent_log_level|lower != 'info'
-
-# - name: Set the log level for the machine agent
-#   win_xml:
-#     path: '{{ machine_agent_dest_folder_win }}/conf/logging/log4j.xml'
-#     xpath: //Logger[@name='{{ item }}']
-#     attribute: level
-#     fragment: "{{ agent_log_level }}"
-#     type: attribute
-#   loop: "{{ agent_loggers }}"
+# # Update the Log4j setting to apply the desired log level to all the loggers
+# # listed in the {{agent_loggers}} list.
+# - name: Set the log level on the agent (if != info, which it is by default)
+#   include_role:
+#     name: logger
+#   vars:
+#     logger_role_standalone: false # no need to check if the dir exists
+#   when: agent_log_level|lower != 'info'
 
 - include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent | bool

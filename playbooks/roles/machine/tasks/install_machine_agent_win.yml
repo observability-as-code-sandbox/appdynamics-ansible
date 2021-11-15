@@ -1,6 +1,7 @@
 ---
 
-#This installs the Machine Agent for Windows - will run after downloading Machine agent + configuring custom extensions
+# This installs the Machine Agent for Windows
+# Will run after downloading Machine agent + configuring custom extensions
 
 - name: 'Install machine agent service'
   win_command: "cscript.exe {{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
