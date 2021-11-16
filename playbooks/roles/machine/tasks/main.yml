@@ -4,6 +4,29 @@
     msg: "The variable 'controller_host_name' is empty"
   when: (controller_host_name is not defined) or (controller_host_name|length == 0)
 
+- name: Pre-configure facts
+  block:
+    # note: set_fact has low precedence for existing variables
+    - name: Setting default tier name when not specified
+      set_fact:
+        tier_name_final: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}"
+      when: 
+        - application_name is defined and application_name | length > 0
+        - tier_name is not defined or tier_name | length == 0
+
+    - name: Setting default tier name when specified
+      set_fact:
+        tier_name_final: "{{ tier_name }}"
+      when: 
+        - application_name is defined and application_name | length > 0
+        - tier_name is defined and tier_name | length > 0
+
+    - name: Print application and tier name
+      ansible.builtin.debug:
+        msg: "Application name is '{{ application_name }}'. Tier name is '{{ tier_name_final }}'."
+      when: 
+        - application_name is defined and application_name | length > 0
+
 # Download Agent
 - include_tasks: download_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'

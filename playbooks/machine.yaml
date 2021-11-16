@@ -29,6 +29,10 @@
         analytics_event_endpoint: ""
         enable_analytics_agent: "false"
 
+        # Application settings
+        application_name: "" # applciation name, empty by default
+        tier_name: "" # tier name, empty by default, should be a service name, leave blank for deployments without an application agent
+
         # AppDynamics user on target machine 
         create_appdynamics_user: yes
         create_appdynamics_local_user: true # todo currently defaults to yes 

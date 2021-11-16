@@ -50,12 +50,13 @@
     url_username: "{{ artifactory_username }}"
     url_password: "{{ artifactory_password }}"
     force: true
-  no_log: false #To prevent passwords to be on logs
+  no_log: true #To prevent passwords to be on logs
   changed_when: false
   register: result
   failed_when: result.status_code != 200
 
-- debug:
+- name: Print result
+  ansible.builtin.debug:
     msg: "{{ result }}"
 
 - name: Unzip machine agent file
@@ -71,6 +72,17 @@
     dest: '{{ machine_agent_dest_folder_win }}/conf/controller-info.xml'
     force: yes
   changed_when: false
+  when: 
+    - application_name is not defined or application_name | length == 0
+
+- name: Override machine-agent controller-info.xml if application_name is set
+  template:
+    src: templates/win-machine-agent-controller-info.application.xml.j2
+    dest: '{{ machine_agent_dest_folder_win }}/conf/controller-info.xml'
+    force: yes
+  changed_when: false
+  when: 
+    - application_name is defined and application_name | length > 0
 
 - name: Remove StdIn.Read in the InstallService.vbs file which stops the playbook from returning
   win_lineinfile:
