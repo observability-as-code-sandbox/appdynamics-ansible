@@ -42,7 +42,7 @@
         encrypted_credentials_store_password: "" # important: obfuscated credentials store password (not plaintext)
 
         # todo
-        # controller_environment: "prod" # prod / dat host: prod: sdfsdf dat: sdasd as dict
+        # controller_environment: "prod"
 
         # Apply different custom extension configuration and/or deploy additional extensions
         is_support_group_paas: false # true / false
@@ -54,6 +54,13 @@
           EventLogMonitor:
             enabled: true  
             extension_folder: 'EventLog'
+            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
+            extension_template: "win-event-log-config.json.j2"
+            extension_vars: "event_log_win_config" # no file extension
+          EventLogMonitorPaaS:
+            enabled: true  
+            is_paas_only: true # set to true for custom extension needs to be deployed to PaaS servers only, set to false or omit otherwise
+            extension_folder: 'EventLogPaaS'
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
             extension_template: "win-event-log-config.json.j2"
             extension_vars: "event_log_win_config" # no file extension

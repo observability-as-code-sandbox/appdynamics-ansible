@@ -2,8 +2,11 @@
 
 - name: Print extensions setting
   debug:
-    var: item
+    msg: "Adding custom extenison: {{ item.key }}!"
   with_dict: "{{ custom_extensions_windows }}"
+  when: 
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 - name: Check if custom extension file exists
   win_uri:
@@ -16,7 +19,9 @@
   failed_when: uri_test.status_code is undefined or uri_test.status_code <= 0 or uri_test.status_code >=400
   with_dict: "{{ custom_extensions_windows }}"
   when: 
-    - item.value.enabled | bool == True
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+
 
 # Downloading custom extension
 - name: Downloading Windows custom extensions 
@@ -32,7 +37,8 @@
   failed_when: result.status_code != 200
   with_dict: "{{ custom_extensions_windows }}"
   when: 
-    - item.value.enabled | bool == True
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 - name: Unzip extension file
   win_unzip:
@@ -41,7 +47,8 @@
     remote_src: yes
   with_dict: "{{ custom_extensions_windows }}"
   when: 
-    - item.value.enabled | bool == True
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 - name: Clean up - remove {{ item.value.extension_file }}
   win_file:
@@ -50,7 +57,8 @@
   changed_when: false
   with_dict: "{{ custom_extensions_windows }}"
   when: 
-    - item.value.enabled | bool == True
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 # Include variable files for different custom extensions
 #Include variable files for different custom extensions
@@ -69,7 +77,7 @@
   with_dict: "{{ custom_extensions_windows }}"
   when: is_support_group_paas | bool == True
 
-# COnfigure
+# Configure
 - name: Configure Custom Extension config file - if Custom Extension is enabled
   template:
     src: "templates/custom_extensions/{{ item.value.extension_template }}"
@@ -80,4 +88,8 @@
   changed_when: false
   with_dict: "{{ custom_extensions_windows }}"
   when: 
-    - item.value.enabled | bool == True
+    - item.value.enabled|bool == True
+    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+
+
+
