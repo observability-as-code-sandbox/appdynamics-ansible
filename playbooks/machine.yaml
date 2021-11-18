@@ -61,28 +61,20 @@
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
             extension_template: "win-event-log-config.json.j2"
             extension_vars: "event_log_win_config" # no file extension
-          EventLogMonitorPaaS:
-            enabled: true  
-            is_paas_only: true # set to true for custom extension needs to be deployed to PaaS servers only, set to false or omit otherwise
-            extension_folder: 'EventLogPaaS'
-            extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
-            extension_template: "win-event-log-config.json.j2"
-            extension_vars: "event_log_win_config" # no file extension
 
-#For ServiceMonitor
-          # ServiceMonitor:
-          #   enabled: true  
-          #   extension_folder: 'ServiceMonitor'
-          #   extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
-          #   extension_template: "win-event-log-config.json.j2"
-          #   extension_vars: "event_log_win_config" # no file extension
-          # ServiceMonitorPaaS:
-          #   enabled: true  
-          #   is_paas_only: true # set to true for custom extension needs to be deployed to PaaS servers only, set to false or omit otherwise
-          #   extension_folder: 'ServiceMonitorPaaS'
-          #   extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
-          #   extension_template: "win-event-log-config.json.j2"
-          #   extension_vars: "event_log_win_config" # no file extension
+          ServiceMonitor:
+            enabled: true  
+            extension_folder: 'ServiceMonitor'
+            extension_file: 'WindowsServiceMonitorExtension.zip' 
+            extension_template: "win-service-monitor-config.json.j2"
+            extension_vars: "service_monitor_win_config" # no file extension
+
+          TaskScheduler:
+            enabled: true  
+            extension_folder: 'TaskScheduler'
+            extension_file: 'WindowsTaskSchedulerMonitorExtension.zip' 
+            extension_template: "win-task-scheduler-config.json.j2"
+            extension_vars: "task_scheduler_win_config" # no file extension
 
         custom_extensions_linux:
           ProcessMonitor:
@@ -90,5 +82,5 @@
             extension_folder: 'ProcessMonitoring'
             extension_file: 'WindowsServiceMonitorExtension.zip'
             extension_template: "linux-process-monitor-config.json.j2"
-            extension_vars: "process_monitor_win_config" # no file extension
+            extension_vars: "process_monitor_linux_config" # no file extension
 
