@@ -72,8 +72,7 @@
     - item.value.enabled | bool == True
 
 #Include variable files for different custom extensions
-- include_vars: custom_extension_vars/event_log_win_config.yml
-- include_vars: custom_extension_vars/process_monitor_win_config.yml
+# - include_vars: custom_extension_vars/process_monitor_linux_config.yml
 
 - name: Configure Custom Extension config file - if Custom Extension is enabled
   become: true
