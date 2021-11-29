@@ -27,6 +27,10 @@
       when: 
         - application_name is defined and application_name | length > 0
 
+- name: Print host name
+  ansible.builtin.debug:
+    msg: "host_name is '{{ host_name }}'."
+
 # Download Agent
 - include_tasks: download_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
