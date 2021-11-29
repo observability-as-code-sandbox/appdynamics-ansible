@@ -8,12 +8,14 @@
     name: "{{ appdynamics_user }}"
     state: present
     gid: "{{ appdynamics_group_id }}"
+    local: yes
   when: (appdynamics_group_id is defined) and (appdynamics_group_id|length > 0)
 
 - name: Make sure we have a '"{{ appdynamics_user }}"' group (without GID)
   group:
     name: "{{ appdynamics_user }}"
     state: present
+    local: yes
   when: (appdynamics_group_id is not defined) or (appdynamics_group_id|length == 0)
 
 - name: Allow '"{{ appdynamics_user }}"' group to have passwordless sudo
