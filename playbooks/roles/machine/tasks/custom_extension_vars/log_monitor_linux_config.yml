@@ -2,6 +2,3 @@
 
 #These values need to be filled in for Process Monitoring config.yml file
 
-process_monitor_appname: "165"
-process_monitor_oauthtoken: "test"
-
