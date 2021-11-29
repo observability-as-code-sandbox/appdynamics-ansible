@@ -89,6 +89,6 @@
             enabled: true  
             extension_folder: 'LogMonitoring'
             extension_file: 'LogMonitor_Linux.zip'
-            extension_template: "linux-process-monitor-config.json.j2"
+            extension_template: "linux-log-monitor-config.json.j2"
             extension_vars: "log_monitor_linux_config" # no file extension
 
