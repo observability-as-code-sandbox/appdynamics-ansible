@@ -47,6 +47,11 @@
   when: 
     - item.value.enabled | bool == True
 
+- name: Load in custom extension variables
+  include_vars:
+    file: custom_extension_vars/{{ item.value.extension_vars }}.yml
+  with_dict: "{{ custom_extensions_linux }}"
+
 - name: Unzip extension file
   become: true
   unarchive:

@@ -1,20 +1,114 @@
-{
-    "ConfigItems": 
-        [
-   
-            {
-                "Name": "appNameOrID", 
-                "Value": "{{ process_monitor_appname }}"   
-            }, 
+#metricPrefix: "Server|Component:<Component-ID>|Custom Metrics|Process Monitor|"
+metricPrefix: "Custom Metrics|Process Monitor|"
 
-            {
-                "Name": "controllerHost", 
-                "Value": "{{ controller_host_name }}:{{controller_port}}"   
-            },
+# displayName: required - Metrics to be reported under this name in Controller's Metric Browser
+# regex/pid/pidFile - process is fetched using this field
+instances:
+  - displayName: "machine agent"
+    regex: ".*machineagent.jar"
 
-            {
-                "Name": "OAuthToken", 
-                "Value": "{{ process_monitor_oauthtoken }}"   
-            }
-        ]
-    }
+  - displayName: "sshd"
+    regex: ".*sshd.*"
+
+  - displayName: "sssd"
+    regex: ".*sssd.*"
+
+  - displayName: "cron"
+    regex: ".*cron.*"
+
+  - displayName: "ntpd"
+    regex: ".*ntpd.*"
+
+  - displayName: "rsyslogd"
+    regex: ".*rsyslogd.*"
+
+  - displayName: "nscd"
+    regex: ".*nscd.*"
+
+  - displayName: "chronyd"
+    regex: ".*chronyd.*"
+
+  - displayName: "auditd"
+    regex: ".*auditd.*"
+
+  - displayName: "vmtoolsd"
+    regex: ".*vmtoolsd.*"
+
+  - displayName: "Splunk"
+    regex: ".*splunk.*"
+
+
+# Not necessary to modify
+linux:
+  process: "ps -eo pid,%cpu=CPU%,%mem=Memory%,rss=RSS,args"
+
+solaris:
+  process: "ps -eo pid,pcpu=CPU%, -o pmem=Memory%, -o rss=RSS -o args"
+
+aix:
+  process: "ps -eo pid,pcpu=CPU%,pmem=Memory%,rss=RSS,args"
+
+metrics:
+  - CPU%:
+      multiplier: 1
+  - Memory%:
+      alias: "Memory%"
+  - RSS:
+      alias: "Resident Set Size"
+  - Running Instances:
+      alias: "Running Instances"
+
+
+# number of concurrent tasks
+numberOfThreads: 5
+
+# This is to run this in scheduled mode. In this case, the extension will fetch the data every 300 seconds
+# and caches the data. The cached data will be reported to controller every min. This way there is no metric drop.
+# Can be used when the data rarely changes or to reduce the load while fetching metrics every minute.
+#taskSchedule:
+#  numberOfThreads: 1
+#  taskDelaySeconds: 300
+
+
+# Generate a custom dashboard based on the provided template
+customDashboard:
+  enabled: false
+  dashboardName: "Process Monitor Dashboard"
+  # Update the path to the dashboard file.
+  pathToSIMDashboard: "monitors/ProcessMonitor/CustomDashboard_SIM.json"
+  pathToNormalDashboard: "monitors/ProcessMonitor/CustomDashboard_Process.json"
+
+# Default information needs to be updated
+controllerInfo:
+  controllerHost: ""
+  controllerPort: 
+  account: ""
+  username: ""
+  password: ""
+#  encryptedPassword: ""
+  controllerSslEnabled: false
+  enableOrchestration: false
+  uniqueHostId: ""
+  accountAccessKey: ""
+  machinePath: ""
+  simEnabled: true
+  applicationName: ""
+  tierName: ""
+  nodeName: ""
+
+encryptionKey: ""
+
+# Note: If the current "metricPathReplacements" is not working on your current machine,
+# please add escape charaters "\\" before your value. It changes from OS to OS, some need it, some don't
+# For Example, replace: "%" -> Becomes -> replace: "\\%"
+metricPathReplacements:
+  - replace: "Percent"
+    replaceWith: "%"
+  - replace: "OneMinuteRate"
+    replaceWith: "1 min Rate"
+  - replace: ","
+    replaceWith: "-"
+  - replace: "."
+    replaceWith: "-"
+  - replace: "ms"
+    replaceWith: ""
