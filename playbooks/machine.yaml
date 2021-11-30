@@ -60,22 +60,22 @@
             enabled: true  
             extension_folder: 'EventLog'
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
-            extension_template: "win-event-log-config.json.j2"
-            extension_vars: "event_log_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
           ServiceMonitor:
             enabled: true  
             extension_folder: 'ServiceMonitor'
             extension_file: 'WindowsServiceMonitorExtension.zip' 
-            extension_template: "win-service-monitor-config.json.j2"
-            extension_vars: "service_monitor_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
           TaskScheduler:
             enabled: true  
             extension_folder: 'TaskScheduler'
             extension_file: 'WindowsTaskSchedulerMonitorExtension.zip' 
-            extension_template: "win-task-scheduler-config.json.j2"
-            extension_vars: "task_scheduler_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
         custom_extensions_linux:
           ProcessMonitor:
