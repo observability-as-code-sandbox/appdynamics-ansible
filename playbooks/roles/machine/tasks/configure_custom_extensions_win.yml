@@ -62,8 +62,10 @@
 
 # Include variable files for different custom extensions
 #Include variable files for different custom extensions
-# - include_vars: custom_extension_vars/event_log_win_config.yml
-# - include_vars: custom_extension_vars/process_monitor_win_config.yml
+
+#Including task to run orchestrate.ps1
+- name: Run Orchestrate.ps1
+  script: {{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/orchestrate.ps1
 
 - name: Load in custom extension variables
   include_vars:

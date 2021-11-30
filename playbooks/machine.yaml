@@ -80,14 +80,14 @@
         custom_extensions_linux:
           ProcessMonitor:
             enabled: false  # actually a windows one, but just for the purpose of copying to target for now
-            extension_folder: 'ProcessMonitoring'
+            extension_folder: 'ProcessMonitor'
             extension_file: 'ProcessMonitor_Linux.zip'
             extension_template: "linux-process-monitor-config.json.j2"
             extension_vars: "process_monitor_linux_config" # no file extension
 
           LogMonitor:
             enabled: true  
-            extension_folder: 'LogMonitoring'
+            extension_folder: 'LogMonitor'
             extension_file: 'LogMonitor_Linux.zip'
             extension_template: "linux-log-monitor-config.json.j2"
             extension_vars: "log_monitor_linux_config" # no file extension
