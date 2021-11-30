@@ -65,34 +65,34 @@
             enabled: true  
             extension_folder: 'EventLog'
             extension_file: 'WindowsEventLogsMonitoringExtension.zip' 
-            extension_template: "win-event-log-config.json.j2"
-            extension_vars: "event_log_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
           ServiceMonitor:
             enabled: true  
             extension_folder: 'ServiceMonitor'
             extension_file: 'WindowsServiceMonitorExtension.zip' 
-            extension_template: "win-service-monitor-config.json.j2"
-            extension_vars: "service_monitor_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
           TaskScheduler:
             enabled: true  
             extension_folder: 'TaskScheduler'
             extension_file: 'WindowsTaskSchedulerMonitorExtension.zip' 
-            extension_template: "win-task-scheduler-config.json.j2"
-            extension_vars: "task_scheduler_win_config" # no file extension
+            extension_template: "win-custom-extension-config.json.j2"
+            extension_vars: "custom_extension_win_config" # no file extension
 
         custom_extensions_linux:
           ProcessMonitor:
             enabled: false  # actually a windows one, but just for the purpose of copying to target for now
-            extension_folder: 'ProcessMonitoring'
+            extension_folder: 'ProcessMonitor'
             extension_file: 'ProcessMonitor_Linux.zip'
             extension_template: "linux-process-monitor-config.json.j2"
             extension_vars: "process_monitor_linux_config" # no file extension
 
           LogMonitor:
             enabled: true  
-            extension_folder: 'LogMonitoring'
+            extension_folder: 'LogMonitor'
             extension_file: 'LogMonitor_Linux.zip'
             extension_template: "linux-log-monitor-config.json.j2"
             extension_vars: "log_monitor_linux_config" # no file extension
