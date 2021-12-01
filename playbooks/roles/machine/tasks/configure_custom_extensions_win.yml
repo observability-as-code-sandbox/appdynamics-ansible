@@ -60,12 +60,14 @@
     - item.value.enabled|bool == True
     - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
-# Include variable files for different custom extensions
-#Include variable files for different custom extensions
-
 #Including task to run orchestrate.ps1
-- name: Run Orchestrate.ps1
-  script: {{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/orchestrate.ps1
+- name: Run Orchestrate.ps1 for Config.xml
+  win_shell: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}/orchestrate.ps1"
+  args:
+    chdir: "{{ machine_agent_dest_folder_win }}/monitors/{{ item.value.extension_folder }}"
+  with_dict: "{{ custom_extensions_windows }}"
+  when: 
+    - item.value.enabled|bool == True
 
 - name: Load in custom extension variables
   include_vars:
