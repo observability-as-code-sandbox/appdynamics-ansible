@@ -1,20 +1,4 @@
 ---
-# - name: Print user settings
-#   ansible.builtin.debug:
-#     msg: Creating user with ID {{ appdynamics_user_id }} and group ID {{ appdynamics_group_id }}
-
-- name: Make sure we have a '"{{ appdynamics_user }}"' group (with GID)
-  group:
-    name: "{{ appdynamics_user }}"
-    state: present
-    gid: "{{ appdynamics_group_id }}"
-  when: (appdynamics_group_id is defined) and (appdynamics_group_id|length > 0)
-
-- name: Make sure we have a '"{{ appdynamics_user }}"' group (without GID)
-  group:
-    name: "{{ appdynamics_user }}"
-    state: present
-  when: (appdynamics_group_id is not defined) or (appdynamics_group_id|length == 0)
 
 - name: Allow '"{{ appdynamics_user }}"' group to have passwordless sudo
   lineinfile:
@@ -23,24 +7,3 @@
     regexp: '^%{{ appdynamics_user }}'
     line: '%{{ appdynamics_user }} ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
-
-- name: "Add '{{ appdynamics_user }}' user, that belongs to '{{ appdynamics_user }}' group (with UID)"
-  user:
-    name: "{{ appdynamics_user }}"
-    groups: 
-      - "{{ appdynamics_user }}"
-    append: yes
-    local: yes
-    uid: "{{ appdynamics_user_id }}"
-    state: present
-  when: (appdynamics_user_id is defined) and (appdynamics_user_id|length > 0)
-
-- name: "Add '{{ appdynamics_user }}' user, that belongs to '{{ appdynamics_user }}' group (without UID)"
-  user:
-    name: "{{ appdynamics_user }}"
-    groups: 
-      - "{{ appdynamics_user }}"
-    append: yes
-    local: yes
-    state: present
-  when: (appdynamics_user_id is not defined) or (appdynamics_user_id|length == 0)

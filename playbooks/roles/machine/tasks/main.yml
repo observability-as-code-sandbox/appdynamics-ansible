@@ -4,7 +4,7 @@
     msg: "The variable 'controller_host_name' is empty"
   when: (controller_host_name is not defined) or (controller_host_name|length == 0)
 
-- name: Pre-configure facts
+- name: Pre-configure application/tier/node facts
   block:
     # note: set_fact has low precedence for existing variables
     - name: Setting default tier name when not specified
@@ -30,6 +30,34 @@
 - name: Print host name
   ansible.builtin.debug:
     msg: "host_name is '{{ host_name }}'."
+
+# Create appdynamics user and group
+- name: Appdynamics user and group
+  block:
+    - name: Check if user already exists
+      ansible.builtin.command: "id {{ appdynamics_user }}"
+      register: existing_user_info
+      ignore_errors: true
+      changed_when: false
+      failed_when: "'do not appear failed when user not found' in existing_user_info.stderr"
+
+    - name: Print command output
+      ansible.builtin.debug:
+        msg: "{{ existing_user_info.stdout, existing_user_info.stderr }}"
+      when: existing_user_info is defined
+
+    - name: Define is_user_existing variable
+      set_fact:
+        is_user_existing: "{{ 'yes' if 'uid=' in existing_user_info.stdout else 'no' }}"
+      when: existing_user_info is defined
+
+    - name: Create appdynamics user and group
+      include_tasks: appd_user_group.yml
+      when: 
+        - is_user_existing | bool == False
+  when: 
+    - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+    - create_appdynamics_user | bool
 
 # Download Agent
 - include_tasks: download_machine_agent_linux.yml
