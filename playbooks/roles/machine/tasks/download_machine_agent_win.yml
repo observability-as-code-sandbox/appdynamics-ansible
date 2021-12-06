@@ -54,14 +54,14 @@
         - agent_source_location == 'artifactory'
 
     - name: Check if Machine Agent file exists - Remote URL
-      uri:
+      win_uri:
         url: '{{ artifactory_url }}/{{ agent_file }}'
         method: HEAD
         url_username: "{{ artifactory_username }}"
         url_password: "{{ artifactory_password }}"
       register: uri_test
       # fail with error if status is unexpected
-      failed_when: uri_test.status is undefined or uri_test.status <= 0 or uri_test.status >=400
+      failed_when: uri_test.status_code is undefined or uri_test.status_code <= 0 or uri_test.status_code >=400
       when: agent_source_location == 'artifactory'
 
     - name: Downloading Windows Machine Agent - Remote URL
@@ -83,7 +83,6 @@
         dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
         mode: 0755
       when: agent_source_location == 'local'
-  
 
 - name: Unzip machine agent file
   win_unzip:
