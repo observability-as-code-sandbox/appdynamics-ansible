@@ -39,7 +39,7 @@
       register: existing_user_info
       ignore_errors: true
       changed_when: false
-      failed_when: "'do not appear failed when user not found' in existing_user_info.stderr"
+      failed_when: "'Unknown command' in existing_user_info.stderr"
 
     - name: Print command output
       ansible.builtin.debug:
@@ -54,7 +54,7 @@
     - name: Create appdynamics user and group
       include_tasks: appd_user_group.yml
       when: 
-        - is_user_existing | bool == False
+        - is_user_existing | default(false) | bool == False
   when: 
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
     - create_appdynamics_user | bool
