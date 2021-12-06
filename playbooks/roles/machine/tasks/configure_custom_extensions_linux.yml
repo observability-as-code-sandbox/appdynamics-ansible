@@ -17,35 +17,57 @@
   when: 
     - item.value.enabled | bool == True
 
-- name: Check if custom extension file exists
-  uri:
-    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
-    method: HEAD
-    url_username: "{{ artifactory_username }}"
-    url_password: "{{ artifactory_password }}"
-  register: uri_test
-  # fail with error if status is unexpected
-  failed_when: uri_test.status is undefined or uri_test.status <= 0 or uri_test.status >=400
-  with_dict: "{{ custom_extensions_linux }}"
-  when: 
-    - item.value.enabled | bool == True
+- name: Downloading Linux Machine Agent Custom Extensions
+  block:
+    - name: Artifactory URL must be provided
+      fail:
+        msg: "The variable 'artifactory_url' is empty"
+      when: 
+        - (artifactory_url is not defined) or (artifactory_url|length == 0)
+        - custom_extensions_source_location == 'artifactory'
 
-# Downloading custom extension
-- name: Downloading Linux custom extensions 
-  become: true
-  get_url:
-    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
-    dest: "{{ machine_agent_dest_folder_linux }}/monitors"
-    url_username: "{{ artifactory_username }}"
-    url_password: "{{ artifactory_password }}"
-    force: true
-  no_log: false #To prevent passwords to be on logs
-  changed_when: false
-  register: result
-  #failed_when: result.status != 200
-  with_dict: "{{ custom_extensions_linux }}"
-  when: 
-    - item.value.enabled | bool == True
+    - name: Check if custom extension file exists
+      uri:
+        url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+        method: HEAD
+        url_username: "{{ artifactory_username }}"
+        url_password: "{{ artifactory_password }}"
+      register: uri_test
+      # fail with error if status is unexpected
+      failed_when: uri_test.status is undefined or uri_test.status <= 0 or uri_test.status >=400
+      with_dict: "{{ custom_extensions_linux }}"
+      when: 
+        - item.value.enabled | bool == True
+        - custom_extensions_source_location == 'artifactory'
+
+    # Downloading custom extension
+    - name: Downloading Linux custom extensions - remote URL
+      become: true
+      get_url:
+        url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+        dest: "{{ machine_agent_dest_folder_linux }}/monitors"
+        url_username: "{{ artifactory_username }}"
+        url_password: "{{ artifactory_password }}"
+        force: true
+      no_log: false #To prevent passwords to be on logs
+      changed_when: false
+      register: result
+      #failed_when: result.status != 200
+      with_dict: "{{ custom_extensions_linux }}"
+      when: 
+        - item.value.enabled | bool == True
+        - custom_extensions_source_location == 'artifactory'
+
+    - name: Copying Linux custom extensions - from Local
+      become: true
+      ansible.builtin.copy:
+        src: "{{ item.value.extension_file }}"
+        dest: "{{ machine_agent_dest_folder_linux }}/monitors"
+        mode: 0755
+      with_dict: "{{ custom_extensions_linux }}"
+      when: 
+        - item.value.enabled | bool == True
+        - custom_extensions_source_location == 'local'
 
 - name: Load in custom extension variables
   include_vars:

@@ -21,7 +21,8 @@
         host_name: '{{ ansible_fqdn }}' # fully qualified domain name (failing that host_name)
 
         ma_agent_dest_file: "machine-agent.zip"
-        agent_source_location: artifactory # valid values: local | artifactory | appdynamics
+        agent_source_location: artifactory                # valid values: local | artifactory
+        custom_extensions_source_location: artifactory    # valid values: local | artifactory
 
         account_access_key: "{{ controller_account_access_key }}"
         account_name: "{{ controller_account_name }}"

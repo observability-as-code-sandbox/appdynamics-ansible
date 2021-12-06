@@ -2,43 +2,67 @@
 
 - name: Print extensions setting
   debug:
-    msg: "Adding custom extenison: {{ item.key }}!"
-  with_dict: "{{ custom_extensions_windows }}"
-  when: 
-    - item.value.enabled|bool == True
-    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
-
-- name: Check if custom extension file exists
-  win_uri:
-    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
-    method: HEAD
-    url_username: "{{ artifactory_username }}"
-    url_password: "{{ artifactory_password }}"
-  register: uri_test
-  # fail with error if status is unexpected
-  failed_when: uri_test.status_code is undefined or uri_test.status_code <= 0 or uri_test.status_code >=400
+    msg: "Adding custom extension: {{ item.key }}!"
   with_dict: "{{ custom_extensions_windows }}"
   when: 
     - item.value.enabled|bool == True
     - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 
-# Downloading custom extension
-- name: Downloading Windows custom extensions 
-  win_get_url:
-    url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
-    dest: "{{ machine_agent_dest_folder_win }}/monitors"
-    url_username: "{{ artifactory_username }}"
-    url_password: "{{ artifactory_password }}"
-    force: true
-  no_log: true #To prevent passwords to be on logs
-  changed_when: false
-  register: result
-  failed_when: result.status_code != 200
-  with_dict: "{{ custom_extensions_windows }}"
-  when: 
-    - item.value.enabled|bool == True
-    - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+- name: Downloading Windows Machine Agent Custom Extensions
+  block:
+
+    - name: Artifactory URL must be provided
+      fail:
+        msg: "The variable 'artifactory_url' is empty"
+      when: 
+        - (artifactory_url is not defined) or (artifactory_url|length == 0)
+        - custom_extensions_source_location == 'artifactory'
+
+    - name: Check if custom extension file exists
+      win_uri:
+        url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+        method: HEAD
+        url_username: "{{ artifactory_username }}"
+        url_password: "{{ artifactory_password }}"
+      register: uri_test
+      # fail with error if status is unexpected
+      failed_when: uri_test.status_code is undefined or uri_test.status_code <= 0 or uri_test.status_code >=400
+      with_dict: "{{ custom_extensions_windows }}"
+      when: 
+        - item.value.enabled|bool == True
+        - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+        - custom_extensions_source_location == 'artifactory'
+
+    # Downloading custom extension
+    - name: Downloading Windows custom extensions - remote URL
+      win_get_url:
+        url: '{{ artifactory_url }}/{{ item.value.extension_file }}'
+        dest: "{{ machine_agent_dest_folder_win }}/monitors"
+        url_username: "{{ artifactory_username }}"
+        url_password: "{{ artifactory_password }}"
+        force: true
+      no_log: true #To prevent passwords to be on logs
+      changed_when: false
+      register: result
+      failed_when: result.status_code != 200
+      with_dict: "{{ custom_extensions_windows }}"
+      when: 
+        - item.value.enabled|bool == True
+        - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+        - custom_extensions_source_location == 'artifactory'
+
+    - name: Copy Machine Agent custom extension files - from Local
+      ansible.windows.win_copy:
+        src: "{{ item.value.extension_file }}"
+        dest: "{{ machine_agent_dest_folder_win }}/monitors"
+        mode: 0755
+      with_dict: "{{ custom_extensions_windows }}"
+      when:
+        - item.value.enabled|bool == True
+        - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
+        - custom_extensions_source_location == 'local'
+
 
 - name: Unzip extension file
   win_unzip:
