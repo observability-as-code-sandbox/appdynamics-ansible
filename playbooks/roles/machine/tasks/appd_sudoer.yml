@@ -1,6 +1,7 @@
 ---
 
 - name: Allow '"{{ appdynamics_user }}"' group to have passwordless sudo
+  become: true
   lineinfile:
     dest: /etc/sudoers
     state: present
