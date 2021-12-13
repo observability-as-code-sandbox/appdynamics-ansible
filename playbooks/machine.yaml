@@ -22,8 +22,9 @@
 
         ma_agent_dest_file: "machine-agent.zip"
 
-        agent_source_location: artifactory                # valid values: local | artifactory
-        custom_extensions_source_location: artifactory    # valid values: local | artifactory
+        # valid values doe source_location: local | artifactory
+        agent_source_location: artifactory                
+        custom_extensions_source_location: artifactory 
 
         account_access_key: "{{ controller_account_access_key }}"
         account_name: "{{ controller_account_name }}"
@@ -32,7 +33,7 @@
         # Can be used to configure the proxy for the agent 
         # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
         # check with ps -ef | grep machine if Machine agent not appearing
-        java_system_properties: "" 
+        java_system_properties: "-Dlog4j2.formatMsgNoLookups=true" 
 
         # Analytics settings
         analytics_event_endpoint: ""
@@ -74,7 +75,7 @@
             extension_folder: 'WindowsCustomExtensions'
             extension_file: 'WindowsCustomExtensions.zip' 
             extension_template: "win-custom-extension-config.json.j2"
-            #extension_vars: "custom_extension_win_config" # no file extension
+            extension_vars: "custom_extension_win_config" # no file extension
 
         custom_extensions_linux:
           ProcessMonitor:
