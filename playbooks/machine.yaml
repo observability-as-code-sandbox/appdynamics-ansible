@@ -21,8 +21,10 @@
         host_name: '{{ ansible_fqdn }}' # fully qualified domain name (failing that host_name)
 
         ma_agent_dest_file: "machine-agent.zip"
-        agent_source_location: artifactory                # valid values: local | artifactory
-        custom_extensions_source_location: artifactory    # valid values: local | artifactory
+
+        # valid values doe source_location: local | artifactory
+        agent_source_location: artifactory                
+        custom_extensions_source_location: artifactory 
 
         account_access_key: "{{ controller_account_access_key }}"
         account_name: "{{ controller_account_name }}"
@@ -31,11 +33,14 @@
         # Can be used to configure the proxy for the agent 
         # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
         # check with ps -ef | grep machine if Machine agent not appearing
-        java_system_properties: "" 
+        java_system_properties: "-Dlog4j2.formatMsgNoLookups=true" 
 
         # Analytics settings
         analytics_event_endpoint: ""
         enable_analytics_agent: "false"
+
+        ma_agent_lin_source_file: "machineagent-bundle-64bit-linux-{{ agent_version }}.zip"
+        ma_agent_win_source_file: "machineagent-bundle-64bit-windows-{{ agent_version }}.zip"
 
         # Application settings
         application_name: "" # applciation name, empty by default
@@ -62,6 +67,8 @@
         # Enable custom extensions
         enable_custom_extensions: false
 
+        custom_extensions_add_java_system_properties: "-Xmx512m -Dappdynamics.agent.maxMetrics=650"
+
         custom_extensions_windows: 
           WindowsCustomExtensions:
             enabled: true  
@@ -72,16 +79,38 @@
 
         custom_extensions_linux:
           ProcessMonitor:
-            enabled: false  # actually a windows one, but just for the purpose of copying to target for now
+            enabled: false 
             extension_folder: 'ProcessMonitor'
             extension_file: 'ProcessMonitor_Linux.zip'
             extension_template: "linux-process-monitor-config.json.j2"
-            extension_vars: "process_monitor_linux_config" # no file extension
+            #extension_vars: "process_monitor_linux_config" # no file extension
 
           LogMonitor:
-            enabled: true  
+            enabled: false  
             extension_folder: 'LogMonitor'
             extension_file: 'LogMonitor_Linux.zip'
             extension_template: "linux-log-monitor-config.json.j2"
             extension_vars: "log_monitor_linux_config" # no file extension
+
+          LinuxInodeUtilization:
+            enabled: true  
+            extension_folder: 'LinuxInodeUtilization'
+            extension_file: 'LinuxInodeUtilization.zip'
+
+          LinuxMountStatus:
+            enabled: true  
+            extension_folder: 'LinuxMountStatus'
+            extension_file: 'LinuxMountStatus.zip'
+
+          LinuxReadOnlyAlert:
+            enabled: true  
+            extension_folder: 'LinuxReadOnlyAlert'
+            extension_file: 'LinuxReadOnlyAlert.zip'
+
+          UptimeInSeconds:
+            enabled: true  
+            extension_folder: 'UptimeInSeconds'
+            extension_file: 'UptimeInSeconds.zip'
+
+          
 

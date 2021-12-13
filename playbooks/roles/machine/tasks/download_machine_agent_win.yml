@@ -38,10 +38,10 @@
   when: previous_agent.stat.exists
   changed_when: false
 
-- name: Adjust the Machine agent file name to match the target OS
-  set_fact:
-    agent_file: "machineagent-bundle-64bit-windows-{{ agent_version }}.zip"
-  when: ansible_os_family == 'Windows' and agent_type == 'machine'
+# - name: Adjust the Machine agent file name to match the target OS
+#   set_fact:
+#     agent_file: "machineagent-bundle-64bit-windows-{{ agent_version }}.zip"
+#   when: ansible_os_family == 'Windows' and agent_type == 'machine'
 
 - name: Downloading Windows Machine Agent
   block:
@@ -55,7 +55,7 @@
 
     - name: Check if Machine Agent file exists - Remote URL
       win_uri:
-        url: '{{ artifactory_url }}/{{ agent_file }}'
+        url: '{{ artifactory_url }}/{{ ma_agent_win_source_file }}'
         method: HEAD
         url_username: "{{ artifactory_username }}"
         url_password: "{{ artifactory_password }}"
@@ -66,7 +66,20 @@
 
     - name: Downloading Windows Machine Agent - Remote URL
       win_get_url:
-        url: '{{ artifactory_url }}/{{ agent_file }}'
+        url: '{{ artifactory_url }}/{{ ma_agent_win_source_file }}'
+        dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
+        url_username: "{{ artifactory_username }}"
+        url_password: "{{ artifactory_password }}"
+        force: true
+      no_log: true #To prevent passwords to be on logs
+      changed_when: false
+      register: result
+      failed_when: result.status_code != 200
+      when: agent_source_location == 'artifactory'
+
+    - name: Downloading Windows Machine Agent - to localhost
+      win_get_url:
+        url: '{{ artifactory_url }}/{{ ma_agent_win_source_file }}'
         dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
         url_username: "{{ artifactory_username }}"
         url_password: "{{ artifactory_password }}"
@@ -79,7 +92,7 @@
 
     - name: Copy Machine Agent files - from Local
       ansible.windows.win_copy:
-        src: "{{ agent_file }}"
+        src: "{{ ma_agent_win_source_file }}"
         dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
         mode: 0755
       when: agent_source_location == 'local'
