@@ -92,7 +92,7 @@
 
     - name: Copy Machine Agent files - from Local
       ansible.windows.win_copy:
-        src: "{{ agent_file }}"
+        src: "{{ ma_agent_win_source_file }}"
         dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
         mode: 0755
       when: agent_source_location == 'local'
