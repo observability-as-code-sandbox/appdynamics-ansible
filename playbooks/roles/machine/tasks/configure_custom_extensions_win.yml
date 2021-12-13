@@ -97,6 +97,7 @@
   include_vars:
     file: custom_extension_vars/{{ item.value.extension_vars }}.yml
   with_dict: "{{ custom_extensions_windows }}"
+  when: item.value.extension_vars is defined
 
 # Overwrite values with PAAS when enabled
 - name: Overwrite variables when 'is_support_group_paas' is True
@@ -117,6 +118,7 @@
   with_dict: "{{ custom_extensions_windows }}"
   when: 
     - item.value.enabled|bool == True
+    - item.value.extension_template is defined
     - (is_support_group_paas|bool == True and item.value.is_paas_only|default(false)|bool == True) or item.value.is_paas_only|default(false) == False
 
 
