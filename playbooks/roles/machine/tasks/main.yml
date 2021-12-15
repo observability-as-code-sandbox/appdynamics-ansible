@@ -30,7 +30,7 @@
 - name: Print host name
   ansible.builtin.debug:
     msg: "host_name is '{{ host_name }}'."
-
+  
 # Create appdynamics user and group
 - name: Appdynamics user and group
   block:
@@ -65,6 +65,8 @@
 
 - include_tasks: download_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
+
+- include_tasks: configure_tags.yml
 
 # Download and Configure Custom Extensions
 - include_tasks: configure_custom_extensions_linux.yml
