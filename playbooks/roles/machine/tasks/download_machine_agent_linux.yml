@@ -16,6 +16,8 @@
     stat:
       path: "{{ machine_agent_dest_folder_linux }}/machineagent.jar"
     register: previous_agent
+    tags: 
+    - updateconfigonly
 
   - name: Backup existing Machine Agent
     archive:
@@ -24,6 +26,8 @@
       mode: 0755
     when: previous_agent.stat.exists
     changed_when: false
+    tags: 
+    - updateconfigonly
 
   - name: Stop Machine Agent service
     become: true
@@ -33,6 +37,8 @@
       daemon_reload: yes
     changed_when: false
     when: previous_agent.stat.exists
+    tags: 
+    - updateconfigonly
 
   - name: Clean up old Machine Agent binaries after backup
     become: true

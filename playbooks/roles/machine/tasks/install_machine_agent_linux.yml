@@ -33,16 +33,22 @@
       state: restarted
       daemon_reload: yes
     changed_when: false
+    tags: 
+    - updateconfigonly
 
   - name: Make sure the service is running
     command: systemctl status appdynamics-machine-agent
     register: result
     ignore_errors: yes
     changed_when: false
+    tags: 
+    - updateconfigonly
 
   - name: Show Machine Agent status
     debug:
       var: result
+    tags: 
+    - updateconfigonly
 
   - name: Clean up - remove {{ ma_agent_dest_file }}
     become: true

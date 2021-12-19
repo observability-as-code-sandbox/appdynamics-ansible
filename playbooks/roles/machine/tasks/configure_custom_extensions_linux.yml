@@ -75,6 +75,8 @@
     file: custom_extension_vars/{{ item.value.extension_vars }}.yml
   with_dict: "{{ custom_extensions_linux }}"
   when: item.value.extension_vars is defined
+  tags: 
+    - updateconfigonly
 
 - name: Unzip extension file
   become: true
@@ -114,3 +116,5 @@
   when: 
     - item.value.enabled | bool == True
     - item.value.extension_template is defined
+  tags: 
+    - updateconfigonly
