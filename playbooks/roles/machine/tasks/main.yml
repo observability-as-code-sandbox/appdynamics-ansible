@@ -62,6 +62,7 @@
 # Download Agent
 - include_tasks: download_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+  tags: updateconfigonly
 
 - include_tasks: download_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
@@ -71,6 +72,7 @@
 # Download and Configure Custom Extensions
 - include_tasks: configure_custom_extensions_linux.yml
   when: enable_custom_extensions | bool == True and (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
+  tags: updateconfigonly
 
 - include_tasks: configure_custom_extensions_win.yml
   when: enable_custom_extensions | bool == True and ansible_os_family == 'Windows'
@@ -78,6 +80,7 @@
 # Install machine agent
 - include_tasks: install_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+  tags: updateconfigonly
 
 - include_tasks: install_machine_agent_win.yml
   when: ansible_os_family == 'Windows'
