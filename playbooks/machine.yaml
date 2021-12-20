@@ -79,11 +79,10 @@
 
         custom_extensions_linux:
           ProcessMonitor:
-            enabled: false 
+            enabled: true 
             extension_folder: 'ProcessMonitor'
             extension_file: 'ProcessMonitor_Linux.zip'
             extension_template: "linux-process-monitor-config.json.j2"
-            #extension_vars: "process_monitor_linux_config" # no file extension
 
           LogMonitor:
             enabled: false  
