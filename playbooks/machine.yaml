@@ -18,7 +18,7 @@
         
         machine_hierarchy: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}|" # Make sure it ends with a |
         machine_custom_tags: # non-mandatory
-          department: "CoreIT"
+          department: [ "CoreIT" ]
         metadata_file_path: "/tmp/cmdb-discovery.yaml" # non-mandatory
         
         sim_enabled: "true"
