@@ -30,25 +30,45 @@
   set_fact: 
       machine_custom_tags_final: "{{ machine_custom_tags_final | default({}) | combine(machine_custom_tags) | combine ({ item.key : item.value }) }}"
   with_items:
-    - { 'key': 'primary_application' , 'value': "{{ metadata_primary_application | default('unknown') }}"}
-    - { 'key': 'environment' , 'value': "{{ metadata_environment | default('unknown') }}"}
-    - { 'key': 'os_distribution' , 'value': "{{ ansible_distribution | default('unknown') }}"}
-    - { 'key': 'os_distribution_version' , 'value': "{{ ansible_distribution_version | default('unknown') }}"}
+    - { 'key': 'primary_application' , 'value': "[\"{{ metadata_primary_application | default('unknown') }}\"]"}
+    - { 'key': 'environment' , 'value': "['{{ metadata_environment | default('unknown') }}']"}
+    - { 'key': 'os_distribution' , 'value': "['{{ ansible_distribution | default('unknown') }}']"}
+    - { 'key': 'os_distribution_version' , 'value': "['{{ ansible_distribution_version | default('unknown') }}']"}
 
-- name: Print machine_custom_tags
+- name: Print machine_custom_tags_final
   ansible.builtin.debug:
-    msg: "machine_custom_tags_final is '{{ machine_custom_tags_final }}'."
-  
+    msg: "{{ machine_custom_tags_final }}"
+
+- name: Create and add items to dictionary
+  set_fact: 
+      machine_custom_tags_final: "{{ machine_custom_tags_final|to_nice_yaml|indent(4)}}"
+  when: 
+    - machine_custom_tags_final is defined
+
 - name: Update Machine Agent custom tags values
   become: true
   template:
-    src: templates/ServerMonitoring.yml.j2
-    dest: '{{ machine_agent_dest_folder_linux }}/extensions/ServerMonitoring/conf/ServerMonitoringConfig.yml'
+    src: templates/lin-ServerMonitoring.yml.j2
+    dest: '{{ machine_agent_dest_folder_linux }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
     owner: "{{ appdynamics_user }}"
     group: "{{ appdynamics_user }}"
     mode: 0755
   changed_when: false
   when: 
     - machine_custom_tags_final is defined
+    - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
+- name: Update Machine Agent custom tags values
+  become: true
+  template:
+    src: templates/win-ServerMonitoring.yml.j2
+    dest: '{{ machine_agent_dest_folder_windows }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+    mode: 0755
+  changed_when: false
+  when: 
+    - machine_custom_tags_final is defined
+    - ansible_os_family == 'Windows'
 
       
