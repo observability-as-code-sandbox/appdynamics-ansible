@@ -15,7 +15,12 @@
         # Define Agent Type and Version
         agent_version: 21.9.0.3184 #update this when upgrading
         agent_type: machine #update this when upgrading
+        
         machine_hierarchy: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}|" # Make sure it ends with a |
+        machine_custom_tags: # non-mandatory
+          department: [ "CoreIT" ]
+        metadata_file_path: "/tmp/cmdb-discovery.yaml" # non-mandatory
+        
         sim_enabled: "true"
         agent_log_level: "info"
         host_name: '{{ ansible_fqdn }}' # fully qualified domain name (failing that host_name)
@@ -33,7 +38,7 @@
         # Can be used to configure the proxy for the agent 
         # mind the space between each property for proxies - Optional - eg: -Dappdynamics.http.proxyHost=IP address -Dappdynamics.http.proxyPort=9090
         # check with ps -ef | grep machine if Machine agent not appearing
-        java_system_properties: "-Dlog4j2.formatMsgNoLookups=true" 
+        java_system_properties: "" 
 
         # Analytics settings
         analytics_event_endpoint: ""
