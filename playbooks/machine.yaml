@@ -118,5 +118,10 @@
             extension_folder: 'UptimeInSeconds'
             extension_file: 'UptimeInSeconds.zip'
 
+          LinuxDiskUsage:
+            enabled: true  
+            extension_folder: 'LinuxDiskUsage'
+            extension_file: 'LinuxDiskUsage.zip'
+
           
 
