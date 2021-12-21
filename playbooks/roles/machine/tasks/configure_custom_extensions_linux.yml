@@ -1,11 +1,5 @@
 ---
 
-- name: Print extensions setting
-  debug:
-    var: item
-  with_dict: "{{ custom_extensions_linux }}"
-
-
 - name: Re-create the extension dir
   become: true
   file:
@@ -100,6 +94,12 @@
   when: 
     - item.value.enabled | bool == True
 
+## Include custom business logic when defined
+- include_tasks: custom_extension_business_logic/{{ item.value.extension_business_logic }}.yml
+  with_dict: "{{ custom_extensions_linux }}"
+  when: 
+    - item.value.enabled | bool == True
+    - item.value.extension_business_logic is defined
 
 - name: Configure Custom Extension config file - if Custom Extension is enabled
   become: true
