@@ -9,11 +9,11 @@
 
 - set_fact:
     mta_process: "postfix"
-  when: mta_symlinks.stdout | regex_search('postfix')
+  when: mta_symlinks.stdout | regex_search('sendmail.postfix')
 
 - set_fact:
     mta_process: "sendmail"
-  when: mta_symlinks.stdout | regex_search('sendmail')
+  when: mta_symlinks.stdout | regex_search('sendmail.sendmail')
 
 - name: Print mta_process value
   ansible.builtin.debug:
