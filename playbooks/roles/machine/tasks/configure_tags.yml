@@ -6,7 +6,18 @@
   register: metadata_file_content
   ignore_errors: true
   changed_when: false
-  when: metadata_file_path is defined
+  when: 
+    - metadata_file_path is defined
+    - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
+- name: Get metadata file content
+  command: "type {{ metadata_file_path }}"
+  register: metadata_file_content
+  ignore_errors: true
+  changed_when: false
+  when: 
+    - metadata_file_path is defined
+    - ansible_os_family == 'Windows'
 
 - name: Print metadata_file_content
   ansible.builtin.debug:
@@ -21,7 +32,7 @@
 
 - name: Set values based on metadata information
   set_fact:
-    metadata_primary_application: "{{ metadata_file_content.stdout | regex_search('primary_application:.*\"(.*)\"\\n', '\\1') | first }}"
+    metadata_primary_application: "{{ metadata_file_content.stdout | regex_search('primary_application:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - metadata_file_content.stdout is defined
@@ -59,13 +70,10 @@
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
 - name: Update Machine Agent custom tags values
-  become: true
   template:
     src: templates/win-ServerMonitoring.yml.j2
     dest: '{{ machine_agent_dest_folder_windows }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
-    owner: "{{ appdynamics_user }}"
-    group: "{{ appdynamics_user }}"
-    mode: 0755
+    force: yes
   changed_when: false
   when: 
     - machine_custom_tags_final is defined
