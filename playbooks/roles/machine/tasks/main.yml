@@ -68,6 +68,8 @@
 
 - include_tasks: configure_tags.yml
 
+- include_tasks: configure_hierarchy.yml
+
 # Download and Configure Custom Extensions
 - include_tasks: configure_custom_extensions_linux.yml
   when: enable_custom_extensions | bool == True and (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
