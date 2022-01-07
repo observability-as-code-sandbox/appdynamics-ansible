@@ -3,7 +3,7 @@
 
 - name: Get hierarchy file content
   command: "cat {{ hierarchy_file_path }}"
-  register: metadata_file_content
+  register: hierarchy_file_content
   ignore_errors: true
   changed_when: false
   when: 
@@ -12,46 +12,46 @@
 
 - name: Get  file content
   command: "type {{ hierarchy_file_path }}"
-  register: metadata_file_content
+  register: hierarchy_file_content
   ignore_errors: true
   changed_when: false
   when: 
     - hierarchy_file_path is defined
     - ansible_os_family == 'Windows'
 
-- name: Print metadata_file_content
+- name: Print hierarchy_file_content
   ansible.builtin.debug:
-    msg: "metadata_file_content is '{{ metadata_file_content }}'."
+    msg: "hierarchy_file_content is '{{ hierarchy_file_content }}'."
 
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_department: "{{ metadata_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
+    metadata_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
-    - metadata_file_content.stdout is defined
-
-#Should be defined already....
-- name: Set values based on hierarchy information
-  set_fact:
-    metadata_OS: "{{ metadata_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
-  ignore_errors: true
-  when: 
-    - metadata_file_content.stdout is defined
-
-- name: Set values based on hierarchy information
-  set_fact:
-    metadata_TCS: "{{ metadata_file_content.stdout | regex_search('metadata_TCS:.*\"(.*)\"', '\\1') | first }}"
-  ignore_errors: true
-  when: 
-    - metadata_file_content.stdout is defined
+    - hierarchy_file_content.stdout is defined
 
 #Should be defined already....
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_PAAS: "{{ metadata_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
+    metadata_OS: "{{ hierarchy_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
-    - metadata_file_content.stdout is defined
+    - hierarchy_file_content.stdout is defined
+
+- name: Set values based on hierarchy information
+  set_fact:
+    metadata_TCS: "{{ hierarchy_file_content.stdout | regex_search('metadata_TCS:.*\"(.*)\"', '\\1') | first }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_file_content.stdout is defined
+
+#Should be defined already....
+- name: Set values based on hierarchy information
+  set_fact:
+    metadata_PAAS: "{{ hierarchy_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_file_content.stdout is defined
 
 #Not edited - needs to be changed
 - name: Create and add items to dictionary
