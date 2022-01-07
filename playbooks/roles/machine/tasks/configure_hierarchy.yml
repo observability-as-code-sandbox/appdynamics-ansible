@@ -1,29 +1,29 @@
 
 #todo make reading variables more generic, so that execution does not depend on specific file's content
 
-- name: Get metadata file content
-  command: "cat {{ metadata_file_path }}"
+- name: Get hierarchy file content
+  command: "cat {{ hierarchy_file_path }}"
   register: metadata_file_content
   ignore_errors: true
   changed_when: false
   when: 
-    - metadata_file_path is defined
+    - hierarchy_file_path is defined
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
-- name: Get metadata file content
-  command: "type {{ metadata_file_path }}"
+- name: Get  file content
+  command: "type {{ hierarchy_file_path }}"
   register: metadata_file_content
   ignore_errors: true
   changed_when: false
   when: 
-    - metadata_file_path is defined
+    - hierarchy_file_path is defined
     - ansible_os_family == 'Windows'
 
 - name: Print metadata_file_content
   ansible.builtin.debug:
     msg: "metadata_file_content is '{{ metadata_file_content }}'."
 
-- name: Set values based on metadata information
+- name: Set values based on hierarchy information
   set_fact:
     metadata_department: "{{ metadata_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
@@ -31,24 +31,24 @@
     - metadata_file_content.stdout is defined
 
 #Should be defined already....
-- name: Set values based on metadata information
+- name: Set values based on hierarchy information
   set_fact:
     metadata_OS: "{{ metadata_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - metadata_file_content.stdout is defined
 
-- name: Set values based on metadata information
+- name: Set values based on hierarchy information
   set_fact:
-    metadata_TCS: "{{ metadata_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
+    metadata_TCS: "{{ metadata_file_content.stdout | regex_search('metadata_TCS:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - metadata_file_content.stdout is defined
 
 #Should be defined already....
-- name: Set values based on metadata information
+- name: Set values based on hierarchy information
   set_fact:
-    metadata_PAAS: "{{ metadata_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
+    metadata_PAAS: "{{ metadata_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - metadata_file_content.stdout is defined
@@ -56,7 +56,7 @@
 #Not edited - needs to be changed
 - name: Create and add items to dictionary
   set_fact: 
-      hierarchy_final: "{{ hierarchy_final | default({}) | combine(machine_custom_tags) | combine ({ item.key : item.value }) }}"
+      hierarchy_final: "{{ hierarchy_final | default({}) | combine(machine_hierarchy) | combine ({ item.key : item.value }) }}"
   with_items:
     - { 'key': 'primary_application' , 'value': "[\"{{ metadata_primary_application | default('unknown') }}\"]"}
     - { 'key': 'environment' , 'value': "['{{ metadata_environment | default('unknown') }}']"}
