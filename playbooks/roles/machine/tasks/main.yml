@@ -68,7 +68,7 @@
 
 - include_tasks: configure_tags.yml
 
-- include_tasks: configure_hierarchy.yml
+# - include_tasks: configure_hierarchy.yml
 
 # Download and Configure Custom Extensions
 - include_tasks: configure_custom_extensions_linux.yml
