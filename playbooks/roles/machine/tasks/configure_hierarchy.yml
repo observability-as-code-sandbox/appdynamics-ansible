@@ -25,7 +25,7 @@
 
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - hierarchy_file_content.stdout is defined
@@ -33,14 +33,14 @@
 #Should be defined already....
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_OS: "{{ hierarchy_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_OS: "{{ hierarchy_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - hierarchy_file_content.stdout is defined
 
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_TCS: "{{ hierarchy_file_content.stdout | regex_search('metadata_TCS:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_TCS: "{{ hierarchy_file_content.stdout | regex_search('hierarchy_TCS:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - hierarchy_file_content.stdout is defined
@@ -48,7 +48,7 @@
 #Should be defined already....
 - name: Set values based on hierarchy information
   set_fact:
-    metadata_PAAS: "{{ hierarchy_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_PAAS: "{{ hierarchy_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
   ignore_errors: true
   when: 
     - hierarchy_file_content.stdout is defined
