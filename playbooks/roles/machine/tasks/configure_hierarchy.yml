@@ -73,12 +73,12 @@
   when: 
     - hierarchy_final is defined
 
-#todo - where is the hierarchy defined? - Machine-agent-controller-info.xml - Check destination
+#Hierarchy defined in Machine-agent-controller-info.xml 
 - name: Update Machine Agent Hierarchy values - Linux OS
   become: true
   template:
     src: templates/machine-agent-controller-info.xml.j2
-    # dest: '{{ machine_agent_dest_folder_linux }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
+    dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml'
     owner: "{{ appdynamics_user }}"
     group: "{{ appdynamics_user }}"
     mode: 0755
@@ -90,7 +90,7 @@
 - name: Update Machine Agent Hierarchy values - Win OS
   template:
     src: templates/machine-agent-controller-info.xml.j2
-    # dest: '{{ machine_agent_dest_folder_windows }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
+    dest: '{{ machine_agent_dest_folder_win }}/conf/controller-info.xml'
     force: yes
   changed_when: false
   when: 
