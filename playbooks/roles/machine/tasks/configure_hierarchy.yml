@@ -10,8 +10,8 @@
     - hierarchy_file_path is defined
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
-- name: Get  file content
-  command: "type {{ hierarchy_file_path }}"
+- name: Get file content
+  win_shell: "type {{ hierarchy_file_path }}"
   register: hierarchy_file_content
   ignore_errors: true
   changed_when: false
@@ -25,53 +25,50 @@
 
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | default('unknown', boolean=True) }}"
   ignore_errors: true
   when: 
-    - hierarchy_file_content.stdout is defined
+    - hierarchy_file_content.stdout is defined  
 
-#Should be defined already....
+#This is always defined
+- name: Set values based on OS 
+  set_fact:
+    hierarchy_os:  "{{ansible_os_family}}"
+  ignore_errors: true
+
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_OS: "{{ hierarchy_file_content.stdout | regex_search('ansible_os_family:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_tcs: "{{ hierarchy_file_content.stdout | regex_search('tcs:.*\"(.*)\"', '\\1') | default('unknown', boolean=True) }}"
   ignore_errors: true
   when: 
-    - hierarchy_file_content.stdout is defined
+    - hierarchy_file_content.stdout is defined 
+
+# need to think of how to include PAAS - is there a nicer way than below?
+- name: Set values based on hierarchy information
+  set_fact:
+    hierarchy_paas: "PAAS|" # Pipe has to be included here in case support group is false (which means hierarchy_final won't end in |)
+  ignore_errors: true
+  when: 
+    - is_support_group_paas is true
 
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_TCS: "{{ hierarchy_file_content.stdout | regex_search('hierarchy_TCS:.*\"(.*)\"', '\\1') | first }}"
+    hierarchy_paas: ""
   ignore_errors: true
   when: 
-    - hierarchy_file_content.stdout is defined
+    - is_support_group_paas is false
 
-#Should be defined already....
-- name: Set values based on hierarchy information
-  set_fact:
-    hierarchy_PAAS: "{{ hierarchy_file_content.stdout | regex_search('is_support_group_paas:.*\"(.*)\"', '\\1') | first }}"
-  ignore_errors: true
-  when: 
-    - hierarchy_file_content.stdout is defined
-
-#Not edited - needs to be changed
-- name: Create and add items to dictionary
+- name: Merge variables
   set_fact: 
-      hierarchy_final: "{{ hierarchy_final | default({}) | combine(machine_hierarchy) | combine ({ item.key : item.value }) }}"
-  with_items:
-    - { 'key': 'primary_application' , 'value': "[\"{{ metadata_primary_application | default('unknown') }}\"]"}
-    - { 'key': 'environment' , 'value': "['{{ metadata_environment | default('unknown') }}']"}
-    - { 'key': 'os_distribution' , 'value': "['{{ ansible_distribution | default('unknown') }}']"}
-    - { 'key': 'os_distribution_version' , 'value': "['{{ ansible_distribution_version | default('unknown') }}']"}
+      hierarchy_final: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_tcs}}|{{hierarchy_paas}}"
+  when: 
+    - hierarchy_file_content.stdout is defined 
 
 - name: Print hierarchy_final
   ansible.builtin.debug:
     msg: "{{ hierarchy_final }}"
-
-- name: Create and add items to dictionary
-  set_fact: 
-      hierarchy_final: "{{ hierarchy_final|to_nice_yaml|indent(4)}}"
   when: 
-    - hierarchy_final is defined
+    - hierarchy_final is defined 
 
 #Hierarchy defined in Machine-agent-controller-info.xml 
 - name: Update Machine Agent Hierarchy values - Linux OS

@@ -16,7 +16,8 @@
         agent_version: 21.9.0.3184 #update this when upgrading
         agent_type: machine #update this when upgrading
         
-        machine_hierarchy: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}|" # Make sure it ends with a |
+        #machine_hierarchy: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}|" # Make sure it ends with a |
+        hierarchy_file_path: "/tmp/hierarchy.yml"
         machine_custom_tags: # non-mandatory
           department: [ "CoreIT" ]
         metadata_file_path: "/tmp/cmdb-discovery.yaml" # non-mandatory
