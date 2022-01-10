@@ -36,8 +36,10 @@
   become: true
   user:
     name: "{{ appdynamics_user }}"
-    group: "{{ appdynamics_group_id }}"
-    append: yes
+    group: "{{ appdynamics_user }}"
+    groups: 
+    - "{{ appdynamics_user }}"
+    append: no
     local: yes
     state: present
   when: (appdynamics_user_id is not defined) or (appdynamics_user_id|length == 0)

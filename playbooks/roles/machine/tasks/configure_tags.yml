@@ -72,7 +72,7 @@
 - name: Update Machine Agent custom tags values
   template:
     src: templates/win-ServerMonitoring.yml.j2
-    dest: '{{ machine_agent_dest_folder_windows }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
+    dest: '{{ machine_agent_dest_folder_win }}/extensions/ServerMonitoring/conf/ServerMonitoring.yml'
     force: yes
   changed_when: false
   when: 
