@@ -13,7 +13,9 @@
 #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
 - name: Backup Machine Agent to  C:\Windows\Temp folder
   win_shell: "Compress-Archive -Path {{ machine_agent_dest_folder_win }} -DestinationPath  C:/Windows/Temp/machine_agent.{{ ansible_date_time.iso8601 }}.zip -Force"
-  when: previous_agent.stat.exists
+  when: 
+    - previous_agent.stat.exists
+    - backup_machine_agent_files | bool
   changed_when: false
 
 - name: Remove StdIn.Read in the UninstallService.vbs file which stops the playbook from returning
