@@ -58,15 +58,15 @@
 
 - name: Merge variables
   set_fact: 
-      hierarchy_final: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_sap | default('NonSAP')}}|{{hierarchy_paas}}"
+      machine_hierarchy: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_sap | default('NonSAP')}}|{{hierarchy_paas}}"
   when: 
     - hierarchy_file_content.stdout is defined 
 
-- name: Print hierarchy_final
+- name: Print machine_hierarchy
   ansible.builtin.debug:
-    msg: "{{ hierarchy_final }}"
+    msg: "{{ machine_hierarchy }}"
   when: 
-    - hierarchy_final is defined 
+    - machine_hierarchy is defined 
 
 #Hierarchy defined in Machine-agent-controller-info.xml 
 - name: Update Machine Agent Hierarchy values - Linux OS
@@ -79,7 +79,7 @@
     mode: 0755
   changed_when: false
   when: 
-    - hierarchy_final is defined
+    - machine_hierarchy is defined
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
 - name: Update Machine Agent Hierarchy values - Win OS
@@ -89,7 +89,7 @@
     force: yes
   changed_when: false
   when: 
-    - hierarchy_final is defined
+    - machine_hierarchy is defined
     - ansible_os_family == 'Windows'
 
       
