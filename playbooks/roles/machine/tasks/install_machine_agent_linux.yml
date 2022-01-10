@@ -1,52 +1,108 @@
 ---
 
-  - name: Add the Agent as a Service using Systemd
-    become: true
-    template:
-      src: templates/appdynamics-machine-agent.service.j2
-      dest: /etc/systemd/system/appdynamics-machine-agent.service
-      force: true
-      owner: root # In cases when Machine Agent must not run as root, you may change it.
-      group: root
-      mode: 0644
-    register: machine_agent_systemd_result
-
-  - name: Enable the Machine Agent to start at system startup
-    become: true
-    systemd:
-      name: appdynamics-machine-agent
-      enabled: yes
-      force: true # Force it to override existing symlink incase of an upgrade
-      masked: no
-
-  # Reload systemd if it is an upgrade or re-installation
-  - name:  Reload systemd configs
-    become: true
-    systemd:
-      daemon_reload: yes
-    #when: previous_agent.stat.exists
-
-  - name: Start the agent service
-    become: true
-    systemd:
-      name: appdynamics-machine-agent
-      state: restarted
-      daemon_reload: yes
+- name: Determine if SysV or SysD system
+  block:
+  - name: Get metadata file content
+    command: "file /sbin/init"  #Should this be win_shell?
+    register: file_command_output
+    ignore_errors: true
     changed_when: false
 
-  - name: Make sure the service is running
-    command: systemctl status appdynamics-machine-agent
-    register: result
-    ignore_errors: yes
-    changed_when: false
+  - name: Create and add items to dictionary
+    set_fact: 
+        is_sysV: "{{ file_command_output.stdout | regex_search('.*lib/systemd/systemd.*') == none }}"
+    when: 
+      - file_command_output is defined
 
-  - name: Show Machine Agent status
-    debug:
-      var: result
+  - name: Print is_sysV
+    ansible.builtin.debug:
+      msg: "is_sysV is '{{ is_sysV }}'."
 
-  - name: Clean up - remove {{ ma_agent_dest_file }}
-    become: true
-    file:
-      path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-      state: absent
-    changed_when: false
+- name: Add the Agent as a Service - SysD
+  become: true
+  template:
+    src: templates/appdynamics-machine-agent.service.j2
+    dest: /etc/systemd/system/appdynamics-machine-agent.service
+    force: true
+    owner: root # In cases when Machine Agent must not run as root, you may change it.
+    group: root
+    mode: 0644
+  register: machine_agent_systemd_result
+  when: is_sysV | bool == False
+
+- name: Add the Agent as a Service - SysV
+  become: true
+  template:
+    src: templates/appdynamics-machine-agent.service.j2
+    dest: /etc/init.d/appdynamics-machine-agent
+    force: true
+    owner: root # In cases when Machine Agent must not run as root, you may change it.
+    group: root
+    mode: 0644
+  register: machine_agent_systemd_result
+  when: is_sysV | bool == True
+
+- name: Enable the Machine Agent to start at system startup - SysD
+  become: true
+  systemd:
+    name: appdynamics-machine-agent
+    enabled: yes
+    force: true # Force it to override existing symlink in case of an upgrade
+    masked: no
+  when: is_sysV | bool == False
+
+- name: Enable the Machine Agent to start at system startup - SysV
+  become: true
+  sysvinit:
+    name: appdynamics-machine-agent
+    enabled: yes
+  when: is_sysV | bool == True
+
+# Reload systemd if it is an upgrade or re-installation
+- name:  Reload systemd configs - SysD
+  become: true
+  systemd:
+    daemon_reload: yes
+  #when: previous_agent.stat.exists
+  when: is_sysV | bool == False
+
+- name: Start the agent service - SysD
+  become: true
+  systemd:
+    name: appdynamics-machine-agent
+    state: restarted
+    daemon_reload: yes
+  changed_when: false
+  when: is_sysV | bool == False
+
+- name: Start the agent service - SysV
+  become: true
+  sysvinit:
+    name: appdynamics-machine-agent
+    state: started
+  changed_when: false
+  when: is_sysV | bool == True
+
+- name: Make sure the service is running - SysD
+  command: systemctl status appdynamics-machine-agent
+  register: result
+  ignore_errors: yes
+  changed_when: false
+  when: is_sysV | bool == False
+
+- name: Make sure the service is running - SysV
+  command: service status appdynamics-machine-agent
+  register: result
+  ignore_errors: yes
+  when: is_sysV | bool == True
+
+- name: Show Machine Agent status
+  debug:
+    var: result
+
+- name: Clean up - remove {{ ma_agent_dest_file }}
+  become: true
+  file:
+    path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+    state: absent
+  changed_when: false
