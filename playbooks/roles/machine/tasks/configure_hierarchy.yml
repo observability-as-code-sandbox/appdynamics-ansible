@@ -1,22 +1,21 @@
 
-#todo make reading variables more generic, so that execution does not depend on specific file's content
 
 - name: Get hierarchy file content
-  command: "cat {{ hierarchy_file_path }}"
+  command: "cat {{ hierarchy_file_path_lin }}"
   register: hierarchy_file_content
   ignore_errors: true
   changed_when: false
   when: 
-    - hierarchy_file_path is defined
+    - hierarchy_file_path_lin is defined
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
-
-- name: Get file content
-  win_shell: "type {{ hierarchy_file_path }}"
+    
+- name: Get hierarchy file content
+  win_shell: "type {{ hierarchy_file_path_win }}"
   register: hierarchy_file_content
   ignore_errors: true
   changed_when: false
   when: 
-    - hierarchy_file_path is defined
+    - hierarchy_file_path_win is defined
     - ansible_os_family == 'Windows'
 
 - name: Print hierarchy_file_content
@@ -25,28 +24,27 @@
 
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_department: "{{ hierarchy_file_content.stdout | regex_search('department:.*\"(.*)\"', '\\1') | default('unknown', boolean=True) }}"
+    hierarchy_department: "{{ hierarchy_department_value }}"
   ignore_errors: true
-  when: 
+  when:
     - hierarchy_file_content.stdout is defined  
 
 #This is always defined
 - name: Set values based on OS 
   set_fact:
-    hierarchy_os:  "{{ansible_os_family}}"
+    hierarchy_os:  "{{ 'Win' if ansible_os_family == 'Windows' else 'Lin' }}"
   ignore_errors: true
 
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_tcs: "{{ hierarchy_file_content.stdout | regex_search('tcs:.*\"(.*)\"', '\\1') | default('unknown', boolean=True) }}"
+    hierarchy_sap: "{{ hierarchy_file_content.stdout | regex_search('.*(SAP).*', '\\1') | default([]) | first }}"
   ignore_errors: true
   when: 
     - hierarchy_file_content.stdout is defined 
 
-# need to think of how to include PAAS - is there a nicer way than below?
 - name: Set values based on hierarchy information
   set_fact:
-    hierarchy_paas: "PAAS|" # Pipe has to be included here in case support group is false (which means hierarchy_final won't end in |)
+    hierarchy_paas: "PaaS|" # Pipe has to be included here in case support group is false (which means hierarchy_final won't end in |)
   ignore_errors: true
   when: 
     - is_support_group_paas is true
@@ -60,7 +58,7 @@
 
 - name: Merge variables
   set_fact: 
-      hierarchy_final: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_tcs}}|{{hierarchy_paas}}"
+      hierarchy_final: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_sap | default('NonSAP')}}|{{hierarchy_paas}}"
   when: 
     - hierarchy_file_content.stdout is defined 
 
