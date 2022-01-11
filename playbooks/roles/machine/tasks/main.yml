@@ -59,27 +59,49 @@
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
     - create_appdynamics_user | bool
 
+# SysV or systemd system
+- name: Determine if SysV or systemd system
+  block:
+  - name: Get metadata file content
+    command: "file /sbin/init"  #Should this be win_shell?
+    register: file_command_output
+    ignore_errors: true
+    changed_when: false
+
+  - name: Create and add items to dictionary
+    set_fact: 
+        is_sysV: "{{ file_command_output.stdout | regex_search('.*lib/systemd/systemd.*') == none }}"
+    when: 
+      - file_command_output is defined
+
+  - name: Print is_sysV
+    ansible.builtin.debug:
+      msg: "is_sysV is '{{ is_sysV }}'."
+  
+  when: 
+    - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
 # Download Agent
 - include_tasks: download_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
-- include_tasks: download_machine_agent_win.yml
-  when: ansible_os_family == 'Windows'
+# - include_tasks: download_machine_agent_win.yml
+#   when: ansible_os_family == 'Windows'
 
-- include_tasks: configure_tags.yml
+#- include_tasks: configure_tags.yml
 
-- include_tasks: configure_hierarchy.yml
+# - include_tasks: configure_hierarchy.yml
 
 # Download and Configure Custom Extensions
-- include_tasks: configure_custom_extensions_linux.yml
-  when: enable_custom_extensions | bool == True and (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
+# - include_tasks: configure_custom_extensions_linux.yml
+#   when: enable_custom_extensions | bool == True and (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
 
-- include_tasks: configure_custom_extensions_win.yml
-  when: enable_custom_extensions | bool == True and ansible_os_family == 'Windows'
+# - include_tasks: configure_custom_extensions_win.yml
+#   when: enable_custom_extensions | bool == True and ansible_os_family == 'Windows'
 
 # Install machine agent
 - include_tasks: install_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
 
-- include_tasks: install_machine_agent_win.yml
-  when: ansible_os_family == 'Windows'
+# - include_tasks: install_machine_agent_win.yml
+#   when: ansible_os_family == 'Windows'
