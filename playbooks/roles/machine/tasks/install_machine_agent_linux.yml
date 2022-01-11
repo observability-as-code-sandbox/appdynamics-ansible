@@ -99,7 +99,7 @@
     become: true
     sysvinit:
       name: appdynamics-machine-agent
-      state: started
+      state: restarted
     changed_when: false
 
   - name: Make sure the service is running - SysV
