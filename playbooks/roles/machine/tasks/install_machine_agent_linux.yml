@@ -1,23 +1,5 @@
 ---
 
-- name: Determine if SysV or systemd system
-  block:
-  - name: Get metadata file content
-    command: "file /sbin/init"  #Should this be win_shell?
-    register: file_command_output
-    ignore_errors: true
-    changed_when: false
-
-  - name: Create and add items to dictionary
-    set_fact: 
-        is_sysV: "{{ file_command_output.stdout | regex_search('.*lib/systemd/systemd.*') == none }}"
-    when: 
-      - file_command_output is defined
-
-  - name: Print is_sysV
-    ansible.builtin.debug:
-      msg: "is_sysV is '{{ is_sysV }}'."
-
 - name: systemd installation block
   block:
   - name: Add the Agent as a Service - systemd
@@ -116,6 +98,7 @@
     command: service appdynamics-machine-agent status
     register: result
     ignore_errors: yes
+    changed_when: false
 
   - name: Show Machine Agent status
     debug:
