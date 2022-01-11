@@ -90,7 +90,7 @@
     become: true
     ansible.builtin.copy:
       remote_src: yes
-      src: "{{ machine_agent_dest_folder_linux }}/etc/sysconfig/appdynamics-machine-agent"
+      src: "{{ machine_agent_dest_folder_linux }}/etc/init.d/appdynamics-machine-agent"
       dest: /etc/init.d/appdynamics-machine-agent
 
   - name: Enable the Machine Agent to start at system startup - SysV
@@ -98,6 +98,11 @@
     sysvinit:
       name: appdynamics-machine-agent
       enabled: yes
+
+  - name: Add agent as a service - SysV
+    become: true
+    command: chkconfig --add appdynamics-machine-agent
+    ignore_errors: yes
 
   - name: Start the agent service - SysV
     become: true
