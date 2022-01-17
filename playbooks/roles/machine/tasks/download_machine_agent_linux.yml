@@ -12,7 +12,7 @@
         owner: "{{ appdynamics_user }}"
         group: "{{ appdynamics_user }}"
 
-  - name: Check if Machine Agent is already installed
+  - name: Check if Machine Agent is already running
     stat:
       path: "{{ machine_agent_dest_folder_linux }}/machineagent.jar"
     register: previous_agent
@@ -27,6 +27,20 @@
       - backup_machine_agent_files | bool
     changed_when: false
 
+  
+
+  - name: Populate service facts
+    ansible.builtin.service_facts:
+
+  - name: Get machine agent service
+    ansible.builtin.set_fact:
+      machine_agent_service: ansible_facts.services["appdynamics-machine-agent.service"]
+
+  - name: Print service state
+    ansible.builtin.debug:
+      var: "{{ machine_agent_service }}.state"
+    when: machine_agent_service is defined
+
   - name: Stop Machine Agent service
     become: true
     systemd:
@@ -34,7 +48,15 @@
       state: stopped
       daemon_reload: yes
     changed_when: false
-    when: previous_agent.stat.exists
+    when: 
+    - ansible_facts.services["appdynamics-machine-agent.service"] is defined 
+    - is_sysV | bool == False
+
+  - name: Stop Service
+    service: name=appdynamics-machine-agent state=stopped
+    when:
+      - ansible_facts.services["appdynamics-machine-agent.service"] is defined 
+      - is_sysV | bool == True
 
   - name: Clean up old Machine Agent binaries after backup
     become: true
