@@ -18,6 +18,7 @@
 - name: Print mta_process value
   ansible.builtin.debug:
     msg: "mta_process is '{{ mta_process }}'."
+  when: mta_process is defined
 
 - set_fact:
     business_logic_processes_mta: "  - displayName: \"{{ mta_process }}\"\n    regex: \".*{{ mta_process }}.*\"\n"
@@ -26,6 +27,7 @@
 - name: Print business_logic_processes_mta value
   ansible.builtin.debug:
     msg: "business_logic_processes_mta is '{{ business_logic_processes_mta }}'."
+  where: business_logic_processes_mta is defined
 
 ### RHEL OS version
 - name: Print ansible_distribution_major_version value
@@ -55,8 +57,8 @@
 ### Final process list
 - set_fact:
     business_logic_processes: |
-      {{ business_logic_processes_mta }}
-      {{ business_logic_processes_os_version }}
+      {{ business_logic_processes_mta | default("")  }}
+      {{ business_logic_processes_os_version | default("")  }}
   when: business_logic_processes_mta is defined or business_logic_processes_os_version is defined
 
 - name: Print business_logic_processes value
