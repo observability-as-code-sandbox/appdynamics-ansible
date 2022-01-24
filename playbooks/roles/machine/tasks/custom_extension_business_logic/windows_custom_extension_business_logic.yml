@@ -1,0 +1,45 @@
+---
+- name: Return "Cluster Service" info
+  ansible.windows.win_service_info:
+    name: "AWS Lite Guest Agent" # "Cluster Service" 
+  register: service_info
+
+- name: Get Service startup mode
+  set_fact:
+    service_startup_mode: "{{ service_info.services[0].start_mode }}"
+  when: service_info is defined and service_info.services is defined
+
+- name: Print service_startup_mode value
+  ansible.builtin.debug:
+    msg: "service_startup_mode={{ service_startup_mode }}"
+  when: service_startup_mode is defined
+
+- name: Set variable values when "Cluster Service" startup-mode is "auto"
+  set_fact:
+    win_enable_cluster_disk_monitor_final: 1
+    win_enable_cluster_network_monitor_final: 1
+    win_enable_cluster_node_monitor_final: 1
+    win_enable_cluster_roles_monitor_final: 1
+  when: 
+  - service_startup_mode is defined
+  - service_startup_mode == "auto"
+
+- name: Set variable values when "Cluster Service" startup-mode is not "auto"
+  set_fact:
+    win_enable_cluster_disk_monitor_final: 0
+    win_enable_cluster_network_monitor_final: 0
+    win_enable_cluster_node_monitor_final: 0
+    win_enable_cluster_roles_monitor_final: 0
+  when: 
+  - service_startup_mode is defined 
+  - service_startup_mode != "auto"
+
+- name: Print Cluster Monitor final values
+  ansible.builtin.debug:
+    msg: 
+    - "win_enable_cluster_disk_monitor_final: {{ win_enable_cluster_disk_monitor_final }}"
+    - "win_enable_cluster_network_monitor_final: {{ win_enable_cluster_network_monitor_final }}"
+    - "win_enable_cluster_node_monitor_final: {{ win_enable_cluster_node_monitor_final }}"
+    - "win_enable_cluster_roles_monitor_final: {{ win_enable_cluster_roles_monitor_final }}"
+  when: service_startup_mode is defined
+
