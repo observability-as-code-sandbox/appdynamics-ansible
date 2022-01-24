@@ -11,3 +11,5 @@ controller_account_access_key: "" # Found under licenses
 enable_ssl: ""
 controller_global_analytics_account_name: '' # Usually customer1_xxxxx-xxxx-xxxx-xxxx
 agent_log_level: "debug" # info | trace | debug | warn | error | fatal | all | off
+# Note: new value necessary for configuration deployment
+controller_access_token: "" #Update this with controller access token value

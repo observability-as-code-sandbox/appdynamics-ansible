@@ -1,0 +1,42 @@
+---
+# tasks file for configuration
+
+- name: Controller URL must be provided
+  fail:
+    msg: "The variable 'controller_host_name' is empty"
+  when: (controller_host_name is not defined) or (controller_host_name|length == 0)
+
+- name: Token value must be provided
+  fail:
+    msg: "The variable 'controller_access_token' is empty"
+  when: (controller_access_token is not defined) or (controller_access_token|length == 0)
+
+- name: Get application id
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/${appId}/health-rules"
+    method: GET
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  register: existing_health_rules
+  #failed_when: "'AWESOME' not in this.content"
+
+- name: Print existing_health_rules
+  ansible.builtin.debug:
+    msg: "Request status is '{{ existing_health_rules.status }}'"
+
+#todo >>> Check if rule already exists ( to use PUT or POST) 
+
+- name: Create health rule
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
+    method: POST
+    body: "{{ lookup('file','Servers-Availavility.json') }}"
+    status_code: 201
+    body_format: json
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  register: hr_information
