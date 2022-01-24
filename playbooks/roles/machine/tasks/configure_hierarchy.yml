@@ -35,6 +35,20 @@
     hierarchy_os:  "{{ 'Win' if ansible_os_family == 'Windows' else 'Lin' }}"
   ignore_errors: true
 
+- name: Set values based on support group
+  set_fact:
+    hierarchy_support_group: "{{ hierarchy_department_value }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_support_group is not defined 
+
+- name: Set values based on support group
+  set_fact:
+    hierarchy_support_group: "{{ hierarchy_file_content.stdout | regex_search('support_group:.*\"(.*)\"', '\\1') | default([]) | first  }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_file_content.stdout is defined 
+
 - name: Set values based on hierarchy information
   set_fact:
     hierarchy_sap: "{{ hierarchy_file_content.stdout | regex_search('.*(SAP).*', '\\1') | default([]) | first }}"
@@ -58,7 +72,7 @@
 
 - name: Merge variables
   set_fact: 
-      machine_hierarchy: "{{hierarchy_department}}|{{hierarchy_os}}|{{hierarchy_sap | default('NonSAP')}}|{{hierarchy_paas}}"
+      machine_hierarchy: "{{hierarchy_support_group | trim | replace(' ','') | replace('|','') }}|{{hierarchy_os}}|{{hierarchy_sap | default('NonSAP')}}|{{hierarchy_paas}}"
   when: 
     - hierarchy_file_content.stdout is defined 
 
