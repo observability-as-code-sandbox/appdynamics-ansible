@@ -106,6 +106,23 @@
   with_dict: "{{ custom_extensions_windows }}"
   when: is_support_group_paas | bool == True
 
+## Include custom business logic when defined
+- include_tasks: custom_extension_business_logic/{{ item.value.extension_business_logic }}.yml
+  with_dict: "{{ custom_extensions_windows }}"
+  when: 
+    - item.value.enabled | bool == True
+    - item.value.extension_business_logic is defined
+
+# 
+- name: Overwrite variables for PaaS systems when "Cluster Service" monitoring is not enabled
+  include_vars:
+    file: custom_extension_vars/{{ item.value.extension_vars }}.paas.cluster_service_disabled.yml
+  with_dict: "{{ custom_extensions_windows }}"
+  when: 
+  - is_support_group_paas | bool == True
+  - cluster_service_enabled is defined 
+  - cluster_service_enabled|bool == False
+
 # Configure
 - name: Configure Custom Extension config file - if Custom Extension is enabled
   template:
