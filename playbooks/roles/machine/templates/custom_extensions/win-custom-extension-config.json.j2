@@ -9,10 +9,10 @@
     "EnableWindowsEventMonitor": "{{ win_enable_event_monitor }}",
     "EnableWindowsServiceMonitor": "{{ win_enable_service_monitor }}",
     "EnableWindowsTaskSchedulerMonitor": "{{ win_enable_task_scheduler_monitor }}",
-    "EnableClusterDiskMonitor": "{{ win_enable_cluster_disk_monitor_final if win_enable_cluster_disk_monitor_final is defined else win_enable_cluster_disk_monitor }}",
-    "EnableClusterNetworkMonitor": "{{ win_enable_cluster_network_monitor_final if win_enable_cluster_network_monitor_final is defined else win_enable_cluster_network_monitor }}",
-    "EnableClusterNodeMonitor": "{{ win_enable_cluster_node_monitor_final if win_enable_cluster_node_monitor_final is defined else win_enable_cluster_node_monitor }}",
-    "EnableClusterRolesMonitor": "{{ win_enable_cluster_roles_monitor_final if win_enable_cluster_roles_monitor_final is defined else win_enable_cluster_roles_monitor }}"
+    "EnableClusterDiskMonitor": "{{ win_enable_cluster_disk_monitor }}",
+    "EnableClusterNetworkMonitor": "{{ win_enable_cluster_network_monitor }}",
+    "EnableClusterNodeMonitor": "{{ win_enable_cluster_node_monitor }}",
+    "EnableClusterRolesMonitor": "{{ win_enable_cluster_roles_monitor }}"
 
     "windows_events_log": [{
             "Application": {{event_log_application}}
