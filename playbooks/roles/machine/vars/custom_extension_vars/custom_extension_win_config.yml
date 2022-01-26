@@ -4,7 +4,7 @@
 
 #Event attributes:
 win_appname: "165"
-win_oauthtoken: "testtesttesttesttest"
+win_oauthtoken: "NonPaaS"
 win_enable_events: 0
 
 #Enabling logging: values "0" (disabled) or "1" (enabled) -

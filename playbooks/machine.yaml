@@ -87,6 +87,7 @@
             extension_file: 'WindowsCustomExtensions.zip' 
             extension_template: "win-custom-extension-config.json.j2"
             extension_vars: "custom_extension_win_config" # no file extension
+            extension_business_logic: "windows_custom_extension_business_logic"
 
         custom_extensions_linux:
           ProcessMonitor:

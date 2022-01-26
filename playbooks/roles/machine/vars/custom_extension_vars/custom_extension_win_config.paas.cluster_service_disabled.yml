@@ -4,7 +4,7 @@
 
 #Event attributes:
 win_appname: "165"
-win_oauthtoken: "PaaS"
+win_oauthtoken: "PaaSClusterDisabled"
 win_enable_events: 0
 
 #Enabling logging: values "0" (disabled) or "1" (enabled) -
@@ -14,10 +14,10 @@ win_enable_logging: 0
 win_enable_event_monitor: 1 
 win_enable_service_monitor: 1 
 win_enable_task_scheduler_monitor: 1 
-win_enable_cluster_disk_monitor: 1
-win_enable_cluster_network_monitor: 1
-win_enable_cluster_node_monitor: 1
-win_enable_cluster_roles_monitor: 1
+win_enable_cluster_disk_monitor: 0
+win_enable_cluster_network_monitor: 0
+win_enable_cluster_node_monitor: 0
+win_enable_cluster_roles_monitor: 0
 
 #Below are values for Event Log:
 event_log_application: '["App 1", "App2", "App3"]'
