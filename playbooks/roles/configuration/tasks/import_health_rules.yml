@@ -1,0 +1,67 @@
+---
+# tasks file for configuration
+
+- name: Get all health rules ror an application
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
+    method: GET
+    return_content: yes
+    status_code: 200
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  register: existing_health_rules
+
+- name: Set fact
+  set_fact:
+    existing_health_rules_json: "{{ existing_health_rules.content | from_json }}"
+  when: existing_health_rules is defined
+
+# to check if rule already exists 
+- name: Set existing health rule names
+  set_fact:
+    existing_health_rules_names: "{{ existing_health_rules_json | json_query('[*].name') }}"
+  when: existing_health_rules_json is defined
+
+- name: Populate templates
+  template:
+    src: templates/{{ item.value.file_name }}.j2
+    dest: "{{ playbook_dir }}/roles/configuration/files/{{ item.value.file_name }}.json"
+  with_dict: "{{ health_rules }}"
+  when: item.value.file_name is defined
+
+- name: Create health rule - POST
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
+    method: POST
+    body: "{{ lookup('file', item.value.file_name + '.json') }}"
+    status_code: 201
+    body_format: json
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  with_dict: "{{ health_rules }}"
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
+  - item.value.rule_name not in existing_health_rules_names
+
+- name: Create health rule - PUT
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules/{{ existing_health_rules_json | json_query(hr_id_query) }}"
+    method: PUT
+    body: "{{ lookup('file', item.value.file_name + '.json') }}"
+    status_code: 200
+    body_format: json
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  with_dict: "{{ health_rules }}"
+  vars:
+    hr_id_query: "[?name=='{{ item.value.rule_name }}'].id | [0]"
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
+  - item.value.rule_name in existing_health_rules_names

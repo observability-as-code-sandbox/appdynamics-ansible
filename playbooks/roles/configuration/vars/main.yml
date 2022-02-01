@@ -8,10 +8,10 @@ application_id: "711"
 
 health_rules: 
   ServersAvailability:
-    rule_name: "Ansible VarName - Servers: Availability is too low"
+    rule_name: "Ansible Custom Name - Servers: Availability is too low"
     file_name: "Servers-Availability"
     enabled: true
   ServersCPUUsage:
-    rule_name: "Ansible VarName - Servers: CPU Usage is too high"
+    rule_name: "Ansible Custom Name - Servers: CPU Usage is too high"
     file_name: "Servers-CPUUsage"
     enabled: false
