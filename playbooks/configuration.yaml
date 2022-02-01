@@ -9,16 +9,4 @@
 
     - include_role:
           name: configuration
-      vars:
-        import_health_rules: true
         
-        # set value from controller (once per controller environment)
-        application_id_infrastructure: "711" 
-
-        health_rules_infrastructure: 
-          ServersAvailability:
-            name: "Ansible Import - Servers: Availability is too low"
-            file: "Servers-Availavility.json"
-          ServersCPUUsage:
-            name: "Servers: CPU Usage is too high"
-            file: "Servers-CPUUsage.json"

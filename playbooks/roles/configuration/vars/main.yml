@@ -1,5 +1,17 @@
 ---
 # vars file for configuration
 
+import_health_rules: true
+        
+# set value from controller (once per controller environment)
+application_id: "711" 
 
-
+health_rules: 
+  ServersAvailability:
+    rule_name: "Ansible VarName - Servers: Availability is too low"
+    file_name: "Servers-Availability"
+    enabled: true
+  ServersCPUUsage:
+    rule_name: "Ansible VarName - Servers: CPU Usage is too high"
+    file_name: "Servers-CPUUsage"
+    enabled: false
