@@ -13,3 +13,8 @@
 
 - name: Include import health rules tasks
   include_tasks: import_health_rules.yml
+  vars:
+    hierarchy_item: "{{ outer_item }}"
+  with_items: "{{ health_rule_hierarchy }}"
+  loop_control:
+    loop_var: outer_item
