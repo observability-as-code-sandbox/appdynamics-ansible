@@ -1,7 +1,7 @@
 {
-    "name": "Ansible Import - Servers: Availability is too low",
-    "enabled": true,
-    "useDataFromLastNMinutes": 10,
+    "name": "Ansible VarName - Servers: CPU Usage is too high",
+    "enabled": false,
+    "useDataFromLastNMinutes": 30,
     "waitTimeAfterViolation": 30,
     "scheduleName": "Always",
     "affects": {
@@ -19,21 +19,21 @@
             "conditionExpression": null,
             "conditions": [
                 {
-                    "name": "Hardware Resources|Machine|Availability Condition",
+                    "name": "Hardware Resources|CPU|%Busy Condition",
                     "shortName": "A",
-                    "evaluateToTrueOnNoData": true,
+                    "evaluateToTrueOnNoData": false,
                     "evalDetail": {
                         "evalDetailType": "SINGLE_METRIC",
-                        "metricAggregateFunction": "SUM",
-                        "metricPath": "Hardware Resources|Machine|Availability",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Hardware Resources|CPU|%Busy",
                         "metricEvalDetail": {
                             "metricEvalDetailType": "SPECIFIC_TYPE",
-                            "compareCondition": "LESS_THAN_SPECIFIC_VALUE",
-                            "compareValue": 300
+                            "compareCondition": "GREATER_THAN_SPECIFIC_VALUE",
+                            "compareValue": 90
                         }
                     },
-                    "triggerEnabled": false,
-                    "minimumTriggers": 5
+                    "triggerEnabled": true,
+                    "minimumTriggers": 15
                 }
             ],
             "evalMatchingCriteria": null
@@ -43,21 +43,21 @@
             "conditionExpression": null,
             "conditions": [
                 {
-                    "name": "Hardware Resources|Machine|Availability Condition",
+                    "name": "Hardware Resources|CPU|%Busy Condition",
                     "shortName": "A",
-                    "evaluateToTrueOnNoData": true,
+                    "evaluateToTrueOnNoData": false,
                     "evalDetail": {
                         "evalDetailType": "SINGLE_METRIC",
-                        "metricAggregateFunction": "SUM",
-                        "metricPath": "Hardware Resources|Machine|Availability",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Hardware Resources|CPU|%Busy",
                         "metricEvalDetail": {
                             "metricEvalDetailType": "SPECIFIC_TYPE",
-                            "compareCondition": "LESS_THAN_SPECIFIC_VALUE",
-                            "compareValue": 500
+                            "compareCondition": "GREATER_THAN_SPECIFIC_VALUE",
+                            "compareValue": 80
                         }
                     },
-                    "triggerEnabled": false,
-                    "minimumTriggers": 5
+                    "triggerEnabled": true,
+                    "minimumTriggers": 15
                 }
             ],
             "evalMatchingCriteria": null
