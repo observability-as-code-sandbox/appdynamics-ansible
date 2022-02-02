@@ -47,14 +47,14 @@
     hierarchy_paas: "PaaS|" # Pipe has to be included here in case support group is false (which means hierarchy_final won't end in |)
   ignore_errors: true
   when: 
-    - is_support_group_paas is true
+    - is_support_group_paas | bool == True
 
 - name: Set values based on hierarchy information
   set_fact:
     hierarchy_paas: ""
   ignore_errors: true
   when: 
-    - is_support_group_paas is false
+    - is_support_group_paas | bool == False
 
 - name: Merge variables
   set_fact: 
