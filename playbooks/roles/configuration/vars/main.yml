@@ -39,3 +39,80 @@ health_rules:
     rule_name: "Linux--Infrastructure--Disk_Inode--DEV"
     file_name: "Linux--Infrastructure--Disk_Inode"
     enabled: true
+
+  Windows--Application--ServiceStatus_DefaultHosts_SMSAgent:
+    rule_name: "Windows--Application--ServiceStatus_DefaultHosts_SMSAgent--DEV"
+    file_name: "Windows--Application--ServiceStatus_DefaultHosts_SMSAgent"
+    enabled: true
+  Windows--Application--ServiceStatus_DefaultHosts_SplunkForwarder:
+    rule_name: "Windows--Application--ServiceStatus_DefaultHosts_SplunkForwarder--DEV"
+    file_name: "Windows--Application--ServiceStatus_DefaultHosts_SplunkForwarder"
+    enabled: true
+  Windows--Application--ServiceStatus_DefaultHosts:
+    rule_name: "Windows--Application--ServiceStatus_DefaultHosts--DEV"
+    file_name: "Windows--Application--ServiceStatus_DefaultHosts"
+    enabled: true
+  Windows--Application--TaskScheduler:
+    rule_name: "Windows--Application--TaskScheduler--DEV"
+    file_name: "Windows--Application--TaskScheduler"
+    enabled: true
+  Windows--Infrastructure--Availability:
+    rule_name: "Windows--Infrastructure--Availability--DEV"
+    file_name: "Windows--Infrastructure--Availability"
+    enabled: true
+  Windows--Infrastructure--ClusterDisk:
+    rule_name: "Windows--Infrastructure--ClusterDisk--DEV"
+    file_name: "Windows--Infrastructure--ClusterDisk"
+    enabled: true
+  Windows--Infrastructure--ClusterFileShareWitness:
+    rule_name: "Windows--Infrastructure--ClusterFileShareWitness--DEV"
+    file_name: "Windows--Infrastructure--ClusterFileShareWitness"
+    enabled: true
+  Windows--Infrastructure--ClusterNode:
+    rule_name: "Windows--Infrastructure--ClusterNode--DEV"
+    file_name: "Windows--Infrastructure--ClusterNode"
+    enabled: true
+  Windows--Infrastructure--ClusterRole:
+    rule_name: "Windows--Infrastructure--ClusterRole--DEV"
+    file_name: "Windows--Infrastructure--ClusterRole"
+    enabled: true
+  Windows--Infrastructure--CPU:
+    rule_name: "Windows--Infrastructure--CPU--DEV"
+    file_name: "Windows--Infrastructure--CPU"
+    enabled: true
+  Windows--Infrastructure--EventLogs_DefaultHost:
+    rule_name: "Windows--Infrastructure--EventLogs_DefaultHost--DEV"
+    file_name: "Windows--Infrastructure--EventLogs_DefaultHost"
+    enabled: true
+  Windows--Infrastructure--EventLogs_PaaSHost:
+    rule_name: "Windows--Infrastructure--EventLogs_PaaSHost--DEV"
+    file_name: "Windows--Infrastructure--EventLogs_PaaSHost"
+    enabled: true
+  Windows--Infrastructure--Memory_Swap:
+    rule_name: "Windows--Infrastructure--Memory_Swap--DEV"
+    file_name: "Windows--Infrastructure--Memory_Swap"
+    enabled: true
+  Windows--Infrastructure--Memory:
+    rule_name: "Windows--Infrastructure--Memory--DEV"
+    file_name: "Windows--Infrastructure--Memory"
+    enabled: true
+  Windows--Infrastructure--ProcessCount:
+    rule_name: "Windows--Infrastructure--ProcessCount--DEV"
+    file_name: "Windows--Infrastructure--ProcessCount"
+    enabled: true
+  Windows--Infrastructure--Volumes_FreeSpace_System_NonSystem:
+    rule_name: "Windows--Infrastructure--Volumes_FreeSpace_System_NonSystem--DEV"
+    file_name: "Windows--Infrastructure--Volumes_FreeSpace_System_NonSystem"
+    enabled: true
+  Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem:
+    rule_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem--DEV"
+    file_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem"
+    enabled: true
+  Windows--Infrastructure--Volumes_FreeSpaceMB_System:
+    rule_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_System--DEV"
+    file_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_System"
+    enabled: true
+  Windows--Network--ClusterNetwork:
+    rule_name: "Windows--Network--ClusterNetwork--DEV"
+    file_name: "Windows--Network--ClusterNetwork"
+    enabled: true
