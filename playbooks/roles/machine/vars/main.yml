@@ -3,7 +3,7 @@ agent_version: 21.9.0.3184 #update this when upgrading
 agent_type: machine #update this when upgrading
 
 # valid values: install|update
-agent_action: install
+input_method: install
 
 #machine_hierarchy: "{{ 'Windows' if ansible_os_family == 'Windows' else 'Linux' }}|" # Make sure it ends with a |
 hierarchy_file_path_lin: "/tmp/cmdb-discovery.yml"

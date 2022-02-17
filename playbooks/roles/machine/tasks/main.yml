@@ -4,9 +4,9 @@
     msg: "The variable 'controller_host_name' is empty"
   when: (controller_host_name is not defined) or (controller_host_name|length == 0)
 
-- name: Print agent_action
+- name: Print input_method
   ansible.builtin.debug:
-    msg: "agent_action is '{{ agent_action }}'."
+    msg: "input_method is '{{ input_method }}'."
 
 - name: Pre-configure application/tier/node facts
   block:
@@ -62,7 +62,7 @@
   when: 
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
     - create_appdynamics_user | bool
-    - agent_action == "install"
+    - input_method == "install"
 
 # SysV or systemd system
 - name: Determine if SysV or systemd system
@@ -90,7 +90,7 @@
 - include_tasks: download_machine_agent_linux.yml
   when: 
     - ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
-    - agent_action == "install"
+    - input_method == "install"
 
 - include_tasks: configure_machine_agent_linux.yml
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
