@@ -12,14 +12,14 @@ health_rule_hierarchy:
 
 health_rules: 
   ServersAvailability:
-    rule_name: "Ansible Custom Name - Servers: Availability is too low"
+    rule_name: "Servers: Availability is too low"
     file_name: "Servers-Availability"
     enabled: false
   ServersCPUUsage:
-    rule_name: "Ansible Custom Name - Servers: CPU Usage is too high"
+    rule_name: "Servers: CPU Usage is too high"
     file_name: "Servers-CPUUsage"
     enabled: false
   DiskInode:
-    rule_name: "Name--Linux--Infrastructure--Disk_Inode--DEV"
+    rule_name: "Linux--Infrastructure--Disk_Inode--DEV"
     file_name: "DiskInode"
     enabled: true
