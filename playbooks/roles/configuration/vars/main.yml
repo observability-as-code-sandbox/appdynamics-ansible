@@ -10,16 +10,32 @@ health_rule_hierarchy:
  - "Root"
  - "Root|Containers"
 
-health_rules: 
-  ServersAvailability:
-    rule_name: "Servers: Availability is too low"
-    file_name: "Servers-Availability"
-    enabled: false
-  ServersCPUUsage:
-    rule_name: "Servers: CPU Usage is too high"
-    file_name: "Servers-CPUUsage"
-    enabled: false
-  DiskInode:
+health_rules:
+  Linux--Application--Daemon:
+    rule_name: "Linux--Application--Daemon--DEV"
+    file_name: "Linux--Application--Daemon"
+    enabled: true
+  Linux--Infrastructure--Availability_Uptime:
+    rule_name: "Linux--Infrastructure--Availability_Uptime--DEV"
+    file_name: "Linux--Infrastructure--Availability_Uptime"
+    enabled: true
+  Linux--Infrastructure--Availability:
+    rule_name: "Linux--Infrastructure--Availability--DEV"
+    file_name: "Linux--Infrastructure--Availability"
+    enabled: true
+  Linux--Infrastructure--CPU_LoadAverage:
+    rule_name: "Linux--Infrastructure--CPU_LoadAverage--DEV"
+    file_name: "Linux--Infrastructure--CPU_LoadAverage"
+    enabled: true
+  Linux--Infrastructure--CPU--SAP:
+    rule_name: "Linux--Infrastructure--CPU--SAP--DEV"
+    file_name: "Linux--Infrastructure--CPU--SAP"
+    enabled: true
+  Linux--Infrastructure--CPU:
+    rule_name: "Linux--Infrastructure--CPU--DEV"
+    file_name: "Linux--Infrastructure--CPU"
+    enabled: true
+  Linux--Infrastructure--Disk_Inode:
     rule_name: "Linux--Infrastructure--Disk_Inode--DEV"
     file_name: "Linux--Infrastructure--Disk_Inode"
     enabled: true
