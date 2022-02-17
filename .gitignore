@@ -13,3 +13,5 @@ ansible.cfg
 
 # ignore config files to be imported
 playbooks/roles/configuration/files/*.json
+
+*.jar
