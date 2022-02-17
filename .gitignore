@@ -10,3 +10,4 @@ ansible.cfg
 #Local values
 .local.*
 *.zip
+playbooks/roles/configuration/files/*.json

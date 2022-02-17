@@ -58,7 +58,6 @@ encrypted_credentials_enable: false
 encrypted_credentials_store_filename: "" # important: package this file together with agent binaries (path to file, e.g. /opt/appdynamics/machine-agent/secretKeyStoreEncrypted)
 encrypted_credentials_store_password: "" # important: obfuscated credentials store password (not plaintext)
 
-# todo
 # controller_environment: "prod"
 
 # Apply different custom extension configuration and/or deploy additional extensions
