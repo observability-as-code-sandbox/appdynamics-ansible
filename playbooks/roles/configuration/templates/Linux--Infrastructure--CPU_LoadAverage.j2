@@ -1,0 +1,48 @@
+{
+    "name": "{{ hierarchy_item}}--{{ item.value.rule_name }}",
+    "enabled": true,
+    "useDataFromLastNMinutes": 15,
+    "waitTimeAfterViolation": 15,
+    "scheduleName": "Always",
+    "affects": {
+        "affectedEntityType": "SERVERS",
+        "serverSelectionCriteria": {
+            "selectServersBy": "AFFECTED_SERVERS",
+            "affectedServers": {
+                "severSelectionScope": "SERVERS_WITHIN_SUBGROUP",
+                "subGroups": [
+                    "{{ hierarchy_item }}"
+                ]
+            }
+        }
+    },
+    "evalCriterias": {
+        "criticalCriteria": {
+            "conditionAggregationType": "ALL",
+            "conditionExpression": null,
+            "conditions": [
+                {
+                    "name": "Hardware Resources|Load|Last 15 minutes",
+                    "shortName": "A",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Hardware Resources|Load|Last 15 minutes",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "BASELINE_TYPE",
+                            "baselineCondition": "GREATER_THAN_BASELINE",
+                            "baselineName": "Default Baseline",
+                            "compareValue": 10,
+                            "baselineUnit": "STANDARD_DEVIATIONS"
+                        }
+                    },
+                    "triggerEnabled": true,
+                    "minimumTriggers": 3
+                }
+            ],
+            "evalMatchingCriteria": null
+        },
+        "warningCriteria": null
+    }
+}

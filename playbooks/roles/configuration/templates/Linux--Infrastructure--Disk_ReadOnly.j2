@@ -1,0 +1,63 @@
+{
+    "name": "{{ hierarchy_item}}--{{ item.value.rule_name }}",
+    "enabled": true,
+    "useDataFromLastNMinutes": 5,
+    "waitTimeAfterViolation": 5,
+    "scheduleName": "Always",
+    "affects": {
+        "affectedEntityType": "SERVERS",
+        "serverSelectionCriteria": {
+            "selectServersBy": "AFFECTED_SERVERS",
+            "affectedServers": {
+                "severSelectionScope": "SERVERS_WITHIN_SUBGROUP",
+                "subGroups": [
+                    "{{ hierarchy_item }}"
+                ]
+            }
+        }
+    },
+    "evalCriterias": {
+        "criticalCriteria": {
+            "conditionAggregationType": "ANY",
+            "conditionExpression": null,
+            "conditions": [
+                {
+                    "name": "Custom Metrics|LinuxReadOnlyAlert|NumberOfReadOnlyMounts",
+                    "shortName": "A",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Custom Metrics|LinuxReadOnlyAlert|NumberOfReadOnlyMountsEXT4",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "SPECIFIC_TYPE",
+                            "compareCondition": "GREATER_THAN_SPECIFIC_VALUE",
+                            "compareValue": 0
+                        }
+                    },
+                    "triggerEnabled": false,
+                    "minimumTriggers": 2
+                },
+                {
+                    "name": "Condition 2",
+                    "shortName": "B",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Custom Metrics|LinuxReadOnlyAlert|NumberOfReadOnlyMountsXFS",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "SPECIFIC_TYPE",
+                            "compareCondition": "GREATER_THAN_SPECIFIC_VALUE",
+                            "compareValue": 0
+                        }
+                    },
+                    "triggerEnabled": false,
+                    "minimumTriggers": 2
+                }
+            ],
+            "evalMatchingCriteria": null
+        },
+        "warningCriteria": null
+    }
+}
