@@ -1,0 +1,46 @@
+{
+    "name": "Root|Containers--Windows--Application--ServiceStatus_DefaultHosts_SMSAgent--DEV",
+    "enabled": true,
+    "useDataFromLastNMinutes": 5,
+    "waitTimeAfterViolation": 5,
+    "scheduleName": "Always",
+    "affects": {
+        "affectedEntityType": "SERVERS",
+        "serverSelectionCriteria": {
+            "selectServersBy": "AFFECTED_SERVERS",
+            "affectedServers": {
+                "severSelectionScope": "SERVERS_WITHIN_SUBGROUP",
+                "subGroups": [
+                    "Root|Containers"
+                ]
+            }
+        }
+    },
+    "evalCriterias": {
+        "criticalCriteria": {
+            "conditionAggregationType": "ALL",
+            "conditionExpression": null,
+            "conditions": [
+                {
+                    "name": "Custom Metrics|WindowsEventLogMonitor|System|Status",
+                    "shortName": "A",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Custom Metrics|ServiceMonitor|SMS Agent Host|Status",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "SPECIFIC_TYPE",
+                            "compareCondition": "LESS_THAN_SPECIFIC_VALUE",
+                            "compareValue": 2
+                        }
+                    },
+                    "triggerEnabled": false,
+                    "minimumTriggers": 2
+                }
+            ],
+            "evalMatchingCriteria": null
+        },
+        "warningCriteria": null
+    }
+}

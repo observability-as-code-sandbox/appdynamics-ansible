@@ -1,7 +1,7 @@
 ---
 # tasks file for configuration
 
-- name: Get all health rules ror an application
+- name: Get all health rules for an application
   uri:
     url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
     method: GET
@@ -25,8 +25,8 @@
 
 - name: Populate templates
   template:
-    src: templates/{{ item.value.file_name }}.j2
-    dest: "{{ playbook_dir }}/roles/configuration/files/{{ item.value.file_name }}.json"
+    src: templates/health_rules/{{ item.value.file_name }}.j2
+    dest: "{{ playbook_dir }}/roles/configuration/files/health_rules/{{ item.value.file_name }}.json"
   with_dict: "{{ health_rules }}"
   when: item.value.file_name is defined
 
@@ -34,7 +34,7 @@
   uri:
     url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
     method: POST
-    body: "{{ lookup('file', item.value.file_name + '.json') }}"
+    body: "{{ lookup('file', 'health_rules/' + item.value.file_name + '.json') }}"
     status_code: 201
     body_format: json
     return_content: yes
@@ -53,7 +53,7 @@
   uri:
     url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules/{{ existing_health_rules_json | json_query(hr_id_query) }}"
     method: PUT
-    body: "{{ lookup('file', item.value.file_name + '.json') }}"
+    body: "{{ lookup('file', 'health_rules/' + item.value.file_name + '.json') }}"
     status_code: 200
     body_format: json
     return_content: yes
