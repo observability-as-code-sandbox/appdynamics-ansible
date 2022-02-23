@@ -1,7 +1,8 @@
 ---
 # vars file for configuration
 
-import_health_rules: true
+import_health_rules: false
+import_dashboards: true
         
 # set value from controller (once per controller environment, no automated way for this identified so far)
 application_id: "711" 
@@ -9,6 +10,16 @@ application_id: "711"
 health_rule_hierarchy:
  - "Root"
  - "Root|Containers"
+
+dashboards:
+  Overall--Infrastructure--Health:
+    dashboard_name: "Overall+Infrastructure+Health--DEV"
+    file_name: "Overall+Infrastructure+Health"
+    enabled: false
+  PaaS--Platform--Health:
+    dashboard_name: "PAAS+Platform+Health--DEV"
+    file_name:  "PAAS+Platform+Health"
+    enabled: true
 
 health_rules:
   Linux--Application--Daemon:

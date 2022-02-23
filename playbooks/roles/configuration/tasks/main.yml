@@ -18,3 +18,8 @@
   with_items: "{{ health_rule_hierarchy }}"
   loop_control:
     loop_var: outer_item
+  when: import_health_rules|default(false)|bool == true
+
+- name: Include import dashboards tasks
+  include_tasks: import_dashboards.yml
+  when: import_dashboards|default(false)|bool == true
