@@ -1,7 +1,7 @@
 ---
 # vars file for configuration
 
-import_health_rules: false
+import_health_rules: true
 import_dashboards: true
         
 # set value from controller (once per controller environment, no automated way for this identified so far)
