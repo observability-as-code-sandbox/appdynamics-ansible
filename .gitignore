@@ -15,3 +15,4 @@ ansible.cfg
 playbooks/roles/configuration/files/*.json
 
 *.jar
+playbooks/roles/configuration/files/dashboards/*.json
