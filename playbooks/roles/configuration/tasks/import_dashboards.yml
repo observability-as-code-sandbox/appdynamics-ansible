@@ -19,12 +19,12 @@
 - name: Populate dashboard templates
   template:
     src: templates/dashboards/{{ item.value.file_name }}.j2
-    dest: "{{ playbook_dir }}/roles/configuration/files/{{ item.value.file_name }}.json"
+    dest: "{{ playbook_dir }}/roles/configuration/files/dashboards/{{ item.value.file_name }}.json"
   with_dict: "{{ dashboards }}"
   when: item.value.file_name is defined
 
 - name: Upload dashboard
-  shell: "curl  --user {{ controller_username }}%40{{ controller_account }}:{{ controller_password }}  -X POST https://{{ controller_host_name }}/controller/CustomDashboardImportExportServlet -F file=@{{ playbook_dir }}/roles/configuration/files/dashboards/{{ item.value.file_name }}.json"
+  shell: "curl  --user {{ controller_username }}%40{{ controller_account }}:{{ controller_password }} -X POST https://{{ controller_host_name }}/controller/CustomDashboardImportExportServlet -F file=@{{ playbook_dir }}/roles/configuration/files/dashboards/{{ item.value.file_name }}.json"
   register: curl_response
   with_dict: "{{ dashboards }}"
   when: 
