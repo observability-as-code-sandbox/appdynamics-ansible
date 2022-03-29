@@ -19,6 +19,10 @@ win_enable_cluster_network_monitor: 0
 win_enable_cluster_node_monitor: 0
 win_enable_cluster_roles_monitor: 0
 
+win_enable_cluster_disk_space_monitor: 0
+win_enable_cluster_disk_state_monitor: 0
+win_enable_iis_pool_monitor: 0
+
 #Below are values for Event Log:
 event_log_application: '["App 1", "App2", "App3"]'
 event_log_security: '["6001", "7001"]'
