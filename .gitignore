@@ -11,3 +11,4 @@ ansible.cfg
 .local.*
 *.zip
 playbooks/roles/configuration/files/*.json
+playbooks/roles/configuration/files/dashboards/*.json
