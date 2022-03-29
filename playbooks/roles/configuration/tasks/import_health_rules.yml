@@ -23,12 +23,52 @@
     existing_health_rules_names: "{{ existing_health_rules_json | json_query('[*].name') }}"
   when: existing_health_rules_json is defined
 
+- name: print hierarchy
+  debug: 
+    msg: "{{ hierarchy_item }}"
+
+# support group
+- name: Set support group value
+  set_fact:
+    support_group: "{{ hierarchy_item | regex_search('.*?\\|.*?\\|(.*?)\\|.*$', '\\1') | first }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_item is defined 
+
+- name: Set support group value
+  set_fact:
+    support_group_no_spaces: '{{ support_group | regex_replace(" ", "") }}'
+  ignore_errors: true
+  when: 
+    - support_group is defined 
+
+- name: print support_group
+  debug: 
+    msg: "{{ support_group }}"
+
+- name: Set managed by value
+  set_fact:
+    managed_by: "{{ item.value }}"
+  ignore_errors: true
+  with_dict: "{{ support_groups_to_managed_by }}"
+  when: 
+   - support_group is defined
+   - item.key | string | regex_replace(" ", "") | regex_search('.*({{ support_group_no_spaces }}).*', ignorecase=True)
+
+- name: print managed_by
+  debug: 
+    msg: "{{ managed_by }}"
+  when: 
+   - managed_by is defined
+
 - name: Populate templates
   template:
     src: templates/health_rules/{{ item.value.file_name }}.j2
     dest: "{{ playbook_dir }}/roles/configuration/files/health_rules/{{ item.value.file_name }}.json"
   with_dict: "{{ health_rules }}"
   when: item.value.file_name is defined
+
+# - meta: end_play
 
 - name: Create health rule - POST
   uri:
@@ -43,7 +83,7 @@
       Authorization: "Bearer {{ controller_access_token }}"
   with_dict: "{{ health_rules }}"
   vars:
-    rule_name_final: "{{ hierarchy_item }}--{{ item.value.rule_name }}"
+    rule_name_final: "Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}"
   when: 
   - item.value.file_name is defined
   - item.value.enabled|bool == True
@@ -62,8 +102,8 @@
       Authorization: "Bearer {{ controller_access_token }}"
   with_dict: "{{ health_rules }}"
   vars:
-    hr_id_query: "[?name=='{{ hierarchy_item }}--{{ item.value.rule_name }}'].id | [0]"
-    rule_name_final: "{{ hierarchy_item }}--{{ item.value.rule_name }}"
+    hr_id_query: "[?name=='Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}'].id | [0]"
+    rule_name_final: "Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}"
   when: 
   - item.value.file_name is defined
   - item.value.enabled|bool == True
