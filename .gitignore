@@ -10,9 +10,5 @@ ansible.cfg
 #Local values
 .local.*
 *.zip
-
-# ignore config files to be imported
 playbooks/roles/configuration/files/*.json
-
-*.jar
 playbooks/roles/configuration/files/dashboards/*.json
