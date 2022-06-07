@@ -11,14 +11,23 @@
     msg: "The variable 'controller_access_token' is empty"
   when: (controller_access_token is not defined) or (controller_access_token|length == 0)
 
-- name: Include import health rules tasks
-  include_tasks: import_health_rules.yml
+- name: Include import infra health rules tasks
+  include_tasks: import_infra_health_rules.yml
   vars:
     hierarchy_item: "{{ outer_item }}"
   with_items: "{{ health_rule_hierarchy }}"
   loop_control:
     loop_var: outer_item
-  when: import_health_rules|default(false)|bool == true
+  when: import_infra_health_rules|default(false)|bool == true
+
+- name: Include import Java application health rules tasks
+  include_tasks: import_java_app_health_rules.yml
+  vars:
+    hierarchy_item: "{{ outer_item }}"
+  with_items: "{{ health_rule_hierarchy }}"
+  loop_control:
+    loop_var: outer_item
+  when: import_java_app_health_rules|default(false)|bool == true
 
 - name: Include import dashboards tasks
   include_tasks: import_dashboards.yml

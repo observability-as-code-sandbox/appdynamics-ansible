@@ -42,9 +42,16 @@
   when: 
     - support_group is defined 
 
-- name: print support_group
+- name: Set support group value
+  set_fact:
+    support_group_no_spec_chars: '{{ support_group_no_spaces | regex_replace("\+", "Plus") }}'
+  ignore_errors: true
+  when: 
+    - support_group is defined 
+
+- name: print support_group_no_spaces
   debug: 
-    msg: "{{ support_group }}"
+    msg: "{{ support_group_no_spaces }}"
 
 - name: Set managed by value
   set_fact:
@@ -53,7 +60,7 @@
   with_dict: "{{ support_groups_to_managed_by }}"
   when: 
    - support_group is defined
-   - item.key | string | regex_replace(" ", "") | regex_search('.*({{ support_group_no_spaces }}).*', ignorecase=True)
+   - item.key | string | regex_replace(" ", "") | regex_search('.*({{ support_group_no_spec_chars }}).*', ignorecase=True)
 
 - name: print managed_by
   debug: 
@@ -63,10 +70,12 @@
 
 - name: Populate templates
   template:
-    src: templates/health_rules/{{ item.value.file_name }}.j2
-    dest: "{{ playbook_dir }}/roles/configuration/files/health_rules/{{ item.value.file_name }}.json"
+    src: templates/health_rules/infrastructure/{{ item.value.file_name }}.j2
+    dest: "{{ playbook_dir }}/roles/configuration/files/health_rules/infrastructure/{{ item.value.file_name }}.json"
   with_dict: "{{ health_rules }}"
-  when: item.value.file_name is defined
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
 
 # - meta: end_play
 
@@ -82,8 +91,10 @@
       Content-Type: application/json
       Authorization: "Bearer {{ controller_access_token }}"
   with_dict: "{{ health_rules }}"
+  loop_control:
+    pause: 33
   vars:
-    rule_name_final: "Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}"
+    rule_name_final: "{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}"
   when: 
   - item.value.file_name is defined
   - item.value.enabled|bool == True
@@ -102,9 +113,12 @@
       Authorization: "Bearer {{ controller_access_token }}"
   with_dict: "{{ health_rules }}"
   vars:
-    hr_id_query: "[?name=='Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}'].id | [0]"
-    rule_name_final: "Ansible--{{ managed_by }}--{{ item.value.rule_name }}--{{ hierarchy_item }}"
+    hr_id_query: "[?name=='{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}'].id | [0]"
+    rule_name_final: "{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}"
   when: 
   - item.value.file_name is defined
   - item.value.enabled|bool == True
   - rule_name_final in existing_health_rules_names
+
+- pause:
+    seconds: 28
