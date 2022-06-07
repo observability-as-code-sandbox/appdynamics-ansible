@@ -1,5 +1,4 @@
 {
-    "id": 568,
     "name": "Standard JVM: Garbage Collection Time is too high",
     "enabled": false,
     "useDataFromLastNMinutes": 30,

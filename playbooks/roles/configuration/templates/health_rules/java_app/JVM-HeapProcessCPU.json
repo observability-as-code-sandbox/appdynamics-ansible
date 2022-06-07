@@ -1,5 +1,4 @@
 {
-    "id": 570,
     "name": "Standard JVM: Heap Process CPU utilization is too high",
     "enabled": false,
     "useDataFromLastNMinutes": 30,
