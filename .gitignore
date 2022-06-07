@@ -13,3 +13,4 @@ ansible.cfg
 playbooks/roles/configuration/files/*.json
 playbooks/roles/configuration/files/dashboards/*.json
 playbooks/roles/configuration/files/health_rules/*.json
+playbooks/roles/configuration/files/health_rules/*/*.json
