@@ -2,21 +2,20 @@
 # vars file for configuration
 
 import_infra_health_rules: false
-import_java_app_health_rules: false
-import_dotnet_app_health_rules: false
+import_java_app_health_rules: true
 import_cluster_app_health_rules: false
 
 import_dashboards: false
         
 # set value from controller (once per controller environment, no automated way for this identified so far)
-application_id: "711" 
+infra_application_id: "711" 
 
 health_rule_hierarchy:
   - "Root|CoreIT|DatabaseSG|Win|NonSAP|PaaS"
 
 java_application_ids:
  - "1086827"
- - "1086828"
+ #- "1086828"
 
 hierarchy_mapping: {
   "Root|DepartmentA|DatabaseSG|Win|NonSAP|PaaS": ["Root|DepartmentA|DatabaseSG|Win|NonSAP|PaaS"]
@@ -48,189 +47,3 @@ dashboards:
     dashboard_name: "PAAS+Platform+Health--DEV"
     file_name:  "PAAS+Platform+Health"
     enabled: true
-
-health_rules:
-
-  Compute--Windows--Infrastructure--CPUBusy:
-    rule_name: "Windows--Infrastructure--CPUBusy"
-    file_name: "Compute--Windows--Infrastructure--CPUBusy"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--Memory_Percentage:
-    rule_name: "Windows--Infrastructure--Memory_Percentage"
-    file_name: "Department--Windows--Infrastructure--Memory_Percentage"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--Memory_Swap:
-    rule_name: "Windows--Infrastructure--Memory_Swap"
-    file_name: "Department--Windows--Infrastructure--Memory_Swap"
-    enabled: "{{ is_win }}"
-
-  Database--Windows--Infrastructure--Volumes_FreeSpacePercentage:
-    rule_name: "Windows--Infrastructure--Volumes_FreeSpacePercentage"
-    file_name: "Database--Windows--Infrastructure--Volumes_FreeSpacePercentage"
-    enabled: "{{ is_win }}"
-
-  Database--Windows--Infrastructure--Volumes_FreeSpaceMB_System:
-    rule_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_System"
-    file_name: "Database--Windows--Infrastructure--Volumes_FreeSpaceMB_System"
-    enabled: "{{ is_win }}"
-
-  Database--Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem:
-    rule_name: "Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem"
-    file_name: "Database--Windows--Infrastructure--Volumes_FreeSpaceMB_NonSystem"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--Availability:
-    rule_name: "Windows--Infrastructure--Availability"
-    file_name: "Department--Windows--Infrastructure--Availability"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--ProcessCount:
-    rule_name: "Windows--Infrastructure--ProcessCount"
-    file_name: "Department--Windows--Infrastructure--ProcessCount"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--Service_SMSAgent:
-    rule_name: "Windows--Infrastructure--Service_SMSAgent"
-    file_name: "Department--Windows--Infrastructure--Service_SMSAgent"
-    enabled: "{{ is_win }}"
-
-  Department--Windows--Infrastructure--Service_SplunkForwarder:
-    rule_name: "Windows--Infrastructure--Service_SplunkForwarder"
-    file_name: "Department--Windows--Infrastructure--Service_SplunkForwarder"
-    enabled: "{{ is_win }}"
-
-  Compute--Windows--Infrastructure--EventLogs_DefaultHost:
-    rule_name: "Windows--Infrastructure--EventLogs_DefaultHost"
-    file_name: "Compute--Windows--Infrastructure--EventLogs_DefaultHost"
-    enabled: "{{ is_win }}"
-
-# ### Linux
-  Linux--Infrastructure--CPUBusy:
-    rule_name: "Linux--Infrastructure--CPUBusy"
-    file_name: "Compute--Linux--Infrastructure--CPUBusy"
-    enabled: "{{ is_not_sap }}"
-
-  Linux--Infrastructure--CPUBusy_SAP:
-    rule_name: "Linux--Infrastructure--CPUBusy_SAP"
-    file_name: "Compute--Linux--Infrastructure--CPUBusy_SAP"
-    enabled: "{{ is_sap }}" 
-
-  Linux--Infrastructure--CPU_LoadAverage:
-    rule_name: "Linux--Infrastructure--CPU_LoadAverage"
-    file_name: "Department--Linux--Infrastructure--CPU_LoadAverage"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Memory_Percentage:
-    rule_name: "Linux--Infrastructure--Memory_Percentage"
-    file_name: "Department--Linux--Infrastructure--Memory_Percentage"
-    enabled: "{{ is_not_sap }}"
-
-  Linux--Infrastructure--Memory_Percentage_SAP:
-    rule_name: "Linux--Infrastructure--Memory_Percentage_SAP"
-    file_name: "Department--Linux--Infrastructure--Memory_Percentage_SAP"
-    enabled: "{{ is_sap }}"
-
-  Linux--Infrastructure--Memory_Swap:
-    rule_name: "Linux--Infrastructure--Memory_Swap"
-    file_name: "Department--Linux--Infrastructure--Memory_Swap"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--DiskUtilization:
-    rule_name: "Linux--Infrastructure--DiskUtilization"
-    file_name: "Department--Linux--Infrastructure--DiskUtilization"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Disk_MountStatus:
-    rule_name: "Linux--Infrastructure--Disk_MountStatus"
-    file_name: "Department--Linux--Infrastructure--Disk_MountStatus"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Disk_ReadOnly:
-    rule_name: "Linux--Infrastructure--Disk_ReadOnly"
-    file_name: "Department--Linux--Infrastructure--Disk_ReadOnly"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Disk_IO:
-    rule_name: "Linux--Infrastructure--Disk_IO"
-    file_name: "Department--Linux--Infrastructure--Disk_IO"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Network_Interface:
-    rule_name: "Linux--Infrastructure--Network_Interface"
-    file_name: "Department--Linux--Infrastructure--Network_Interface"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Disk_Inode:
-    rule_name: "Linux--Infrastructure--Disk_Inode"
-    file_name: "Department--Linux--Infrastructure--Disk_Inode"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--ProcessCount:
-    rule_name: "Linux--Infrastructure--ProcessCount"
-    file_name: "Department--Linux--Infrastructure--ProcessCount"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Availability:
-    rule_name: "Linux--Infrastructure--Availability"
-    file_name: "Department--Linux--Infrastructure--Availability"
-    enabled: "{{ is_lin }}"
-
-  Linux--Infrastructure--Availability_Uptime:
-    rule_name: "Linux--Infrastructure--Availability_Uptime"
-    file_name: "Department--Linux--Infrastructure--Availability_Uptime"
-    enabled: "{{ is_lin }}"
-
-  Department--Linux--Infrastructure--Daemon:
-    rule_name: "Linux--Infrastructure--Daemon"
-    file_name: "Department--Linux--Infrastructure--Daemon"
-    enabled: "{{ is_lin }}"
-
-
-  Department--Windows--Infrastructure--ServiceDown_PaaS:
-    rule_name: "Windows--Infrastructure--ServiceDown_PaaS"
-    file_name: "Department--Windows--Infrastructure--ServiceDown_PaaS"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--ClusterDisk:
-    rule_name: "Windows--Infrastructure--ClusterDisk"
-    file_name: "Department--Windows--Infrastructure--ClusterDisk"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--ClusterFileShareWitness:
-    rule_name: "Windows--Infrastructure--ClusterFileShareWitness"
-    file_name: "Department--Windows--Infrastructure--ClusterFileShareWitness"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--Cluster_SQLServerAvailabilityGroup:
-    rule_name: "Windows--Infrastructure--Cluster_SQLServerAvailabilityGroup"
-    file_name: "Department--Windows--Infrastructure--Cluster_SQLServerAvailabilityGroup"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--ClusterRole:
-    rule_name: "Windows--Infrastructure--ClusterRole"
-    file_name: "Department--Windows--Infrastructure--ClusterRole"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--ClusterNode:
-    rule_name: "Windows--Infrastructure--ClusterNode"
-    file_name: "Department--Windows--Infrastructure--ClusterNode"
-    enabled: "{{ is_paas }}"
-
-  Compute--Windows--Infrastructure--EventLogs_PaaSHost:
-    rule_name: "Windows--Infrastructure--EventLogs_PaaSHost"
-    file_name: "Compute--Windows--Infrastructure--EventLogs_PaaSHost"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--MSSQL_DiskSpace:
-    rule_name: "Windows--Infrastructure--MSSQL_DiskSpace"
-    file_name: "Department--Windows--Infrastructure--MSSQL_DiskSpace"
-    enabled: "{{ is_paas }}"
-
-  Department--Windows--Infrastructure--ClusterDiskState:
-    rule_name: "Windows--Infrastructure--ClusterDiskState"
-    file_name: "Department--Windows--Infrastructure--ClusterDiskState"
-    enabled: "{{ is_paas }}"
-
-

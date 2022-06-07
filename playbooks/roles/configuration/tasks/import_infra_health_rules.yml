@@ -83,7 +83,7 @@
   uri:
     url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
     method: POST
-    body: "{{ lookup('file', 'health_rules/' + item.value.file_name + '.json') }}"
+    body: "{{ lookup('file', 'health_rules/infrastructure/' + item.value.file_name + '.json') }}"
     status_code: 201
     body_format: json
     return_content: yes
@@ -104,7 +104,7 @@
   uri:
     url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules/{{ existing_health_rules_json | json_query(hr_id_query) }}"
     method: PUT
-    body: "{{ lookup('file', 'health_rules/' + item.value.file_name + '.json') }}"
+    body: "{{ lookup('file', 'health_rules/infrastructure/' + item.value.file_name + '.json') }}"
     status_code: 200
     body_format: json
     return_content: yes

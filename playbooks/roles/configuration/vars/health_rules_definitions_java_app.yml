@@ -1,0 +1,12 @@
+
+health_rules:
+
+  Agent-Availability:
+    rule_name: "Standard Application: Agent Availability"
+    file_name: "Agent-Availability"
+    enabled: true
+
+  BusinessTransaction-ErrorRate:
+    rule_name: "Standard Business Transaction: Error Rate Health"
+    file_name: "BusinessTransaction-ErrorRate"
+    enabled: true
