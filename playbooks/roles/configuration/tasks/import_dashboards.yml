@@ -1,0 +1,32 @@
+---
+# tasks file for configuration
+
+- name: Controller username must be provided
+  fail:
+    msg: "The variable 'controller_username' is empty"
+  when: (controller_username is not defined) or (controller_username|length == 0)
+
+- name: Controller user password must be provided
+  fail:
+    msg: "The variable 'controller_password' is empty"
+  when: (controller_password is not defined) or (controller_password|length == 0)
+
+- name: Controller user account must be provided
+  fail:
+    msg: "The variable 'controller_account' is empty"
+  when: (controller_account is not defined) or (controller_account|length == 0)
+
+- name: Populate dashboard templates
+  template:
+    src: templates/dashboards/{{ item.value.file_name }}.j2
+    dest: "{{ playbook_dir }}/roles/configuration/files/dashboards/{{ item.value.file_name }}.json"
+  with_dict: "{{ dashboards }}"
+  when: item.value.file_name is defined
+
+- name: Upload dashboard
+  shell: "curl  --user {{ controller_username }}%40{{ controller_account }}:{{ controller_password }} -X POST https://{{ controller_host_name }}/controller/CustomDashboardImportExportServlet -F file=@{{ playbook_dir }}/roles/configuration/files/dashboards/{{ item.value.file_name }}.json"
+  register: curl_response
+  with_dict: "{{ dashboards }}"
+  when: 
+    - item.value.file_name is defined
+    - item.value.enabled|bool == True

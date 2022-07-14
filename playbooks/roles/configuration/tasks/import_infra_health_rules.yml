@@ -1,0 +1,124 @@
+---
+# tasks file for configuration
+
+- name: Get all health rules for an application
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
+    method: GET
+    return_content: yes
+    status_code: 200
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  register: existing_health_rules
+
+- name: Set fact
+  set_fact:
+    existing_health_rules_json: "{{ existing_health_rules.content | from_json }}"
+  when: existing_health_rules is defined
+
+# to check if rule already exists 
+- name: Set existing health rule names
+  set_fact:
+    existing_health_rules_names: "{{ existing_health_rules_json | json_query('[*].name') }}"
+  when: existing_health_rules_json is defined
+
+- name: print hierarchy
+  debug: 
+    msg: "{{ hierarchy_item }}"
+
+# support group
+- name: Set support group value
+  set_fact:
+    support_group: "{{ hierarchy_item | regex_search('.*?\\|.*?\\|(.*?)\\|.*$', '\\1') | first }}"
+  ignore_errors: true
+  when: 
+    - hierarchy_item is defined 
+
+- name: Set support group value
+  set_fact:
+    support_group_no_spaces: '{{ support_group | regex_replace(" ", "") }}'
+  ignore_errors: true
+  when: 
+    - support_group is defined 
+
+- name: Set support group value
+  set_fact:
+    support_group_no_spec_chars: '{{ support_group_no_spaces | regex_replace("\+", "Plus") }}'
+  ignore_errors: true
+  when: 
+    - support_group is defined 
+
+- name: print support_group_no_spaces
+  debug: 
+    msg: "{{ support_group_no_spaces }}"
+
+- name: Set managed by value
+  set_fact:
+    managed_by: "{{ item.value }}"
+  ignore_errors: true
+  with_dict: "{{ support_groups_to_managed_by }}"
+  when: 
+   - support_group is defined
+   - item.key | string | regex_replace(" ", "") | regex_search('.*({{ support_group_no_spec_chars }}).*', ignorecase=True)
+
+- name: print managed_by
+  debug: 
+    msg: "{{ managed_by }}"
+  when: 
+   - managed_by is defined
+
+- name: Populate templates
+  template:
+    src: templates/health_rules/infrastructure/{{ item.value.file_name }}.j2
+    dest: "{{ playbook_dir }}/roles/configuration/files/health_rules/infrastructure/{{ item.value.file_name }}.json"
+  with_dict: "{{ health_rules }}"
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
+
+# - meta: end_play
+
+- name: Create health rule - POST
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules"
+    method: POST
+    body: "{{ lookup('file', 'health_rules/infrastructure/' + item.value.file_name + '.json') }}"
+    status_code: 201
+    body_format: json
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  with_dict: "{{ health_rules }}"
+  loop_control:
+    pause: 33
+  vars:
+    rule_name_final: "{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}"
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
+  - rule_name_final not in existing_health_rules_names
+
+- name: Create health rule - PUT
+  uri:
+    url: "https://{{ controller_host_name }}/controller/alerting/rest/v1/applications/{{ application_id }}/health-rules/{{ existing_health_rules_json | json_query(hr_id_query) }}"
+    method: PUT
+    body: "{{ lookup('file', 'health_rules/infrastructure/' + item.value.file_name + '.json') }}"
+    status_code: 200
+    body_format: json
+    return_content: yes
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ controller_access_token }}"
+  with_dict: "{{ health_rules }}"
+  vars:
+    hr_id_query: "[?name=='{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}'].id | [0]"
+    rule_name_final: "{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}"
+  when: 
+  - item.value.file_name is defined
+  - item.value.enabled|bool == True
+  - rule_name_final in existing_health_rules_names
+
+- pause:
+    seconds: 28

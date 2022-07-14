@@ -1,0 +1,63 @@
+{
+    "id": 73820,
+    "name": "{{ department }}--{{ managed_by }}--{{ item.value.rule_name }}--{{ support_group_no_spaces }}",
+    "enabled": true,
+    "useDataFromLastNMinutes": 5,
+    "waitTimeAfterViolation": 30,
+    "scheduleName": "Always",
+    "affects": {
+        "affectedEntityType": "SERVERS",
+        "serverSelectionCriteria": {
+            "selectServersBy": "AFFECTED_SERVERS",
+           "affectedServers": {
+                "severSelectionScope": "SERVERS_WITHIN_SUBGROUP",
+                "subGroups": 
+                    {{ hierarchy_mapping[hierarchy_item] }}
+            }
+        }
+    },
+    "evalCriterias": {
+        "criticalCriteria": {
+            "conditionAggregationType": "ANY",
+            "conditionExpression": null,
+            "conditions": [
+                {
+                    "name": "Cluster Node Violation",
+                    "shortName": "A",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Custom Metrics|WindowsClusterHealthMonitoring|Node|*|State",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "SPECIFIC_TYPE",
+                            "compareCondition": "LESS_THAN_SPECIFIC_VALUE",
+                            "compareValue": 2
+                        }
+                    },
+                    "triggerEnabled": false,
+                    "minimumTriggers": 1
+                },
+                {
+                    "name": "Cluster Node Violation",
+                    "shortName": "B",
+                    "evaluateToTrueOnNoData": false,
+                    "evalDetail": {
+                        "evalDetailType": "SINGLE_METRIC",
+                        "metricAggregateFunction": "VALUE",
+                        "metricPath": "Custom Metrics|WindowsClusterHealthMonitoring|Node|*|NodeState",
+                        "metricEvalDetail": {
+                            "metricEvalDetailType": "SPECIFIC_TYPE",
+                            "compareCondition": "LESS_THAN_SPECIFIC_VALUE",
+                            "compareValue": 2
+                        }
+                    },
+                    "triggerEnabled": false,
+                    "minimumTriggers": 1
+                }
+            ],
+            "evalMatchingCriteria": null
+        },
+        "warningCriteria": null
+    }
+}

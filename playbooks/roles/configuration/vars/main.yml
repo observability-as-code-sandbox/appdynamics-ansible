@@ -1,0 +1,49 @@
+---
+# vars file for configuration
+
+import_infra_health_rules: false
+import_java_app_health_rules: true
+import_cluster_app_health_rules: false
+
+import_dashboards: false
+        
+# set value from controller (once per controller environment, no automated way for this identified so far)
+infra_application_id: "711" 
+
+health_rule_hierarchy:
+  - "Root|CoreIT|DatabaseSG|Win|NonSAP|PaaS"
+
+java_application_ids:
+ - "1086827"
+ #- "1086828"
+
+hierarchy_mapping: {
+  "Root|DepartmentA|DatabaseSG|Win|NonSAP|PaaS": ["Root|DepartmentA|DatabaseSG|Win|NonSAP|PaaS"]
+}
+  
+department: "DepartmentA"
+is_paas: true 
+is_win: true
+is_lin: false
+is_sap: false
+is_not_sap: false
+
+support_groups_to_managed_by: {
+  "Database SG": ManagedByTeam
+}
+
+cpu_critical_threshold: 95
+cpu_warning_threshold: 90
+
+memory_critical_threshold: 95
+memory_warning_threshold: 90
+
+dashboards:
+  Overall--Infrastructure--Health:
+    dashboard_name: "Overall+Infrastructure+Health--DEV"
+    file_name: "Overall+Infrastructure+Health"
+    enabled: false
+  PaaS--Platform--Health:
+    dashboard_name: "PAAS+Platform+Health--DEV"
+    file_name:  "PAAS+Platform+Health"
+    enabled: true
